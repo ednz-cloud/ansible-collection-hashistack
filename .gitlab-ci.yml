@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json
+stages:
+  - gate
+  - e2e-tests:pre
+  - e2e-tests
+  - release:pre
+  - release
+
+include:
+  - local: .gitlab-ci/workflows/gate-commit-check.yml
+  - local: .gitlab-ci/workflows/gate-ansible-lint.yml
+  - local: .gitlab-ci/workflows/merge-request.yml
+  - local: .gitlab-ci/workflows/release.yml

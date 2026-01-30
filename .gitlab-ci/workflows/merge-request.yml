@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json
+e2e-tests:pre:set-molecule-env:
+  stage: e2e-tests:pre
+  image: alpine:3.23.2
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+  variables:
+    OS_AUTH_TYPE: v3applicationcredential
+    OS_INTERFACE: public
+  script:
+    - echo "OS_AUTH_TYPE=${OS_AUTH_TYPE}" >> e2e-tests:pre:set-molecule-env.env
+    - echo "OS_INTERFACE=${OS_INTERFACE}" >> e2e-tests:pre:set-molecule-env.env
+  artifacts:
+    expire_in: 1 hour
+    reports:
+      dotenv: e2e-tests:pre:set-molecule-env.env
+    access: none
+
+include:
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/vault-get-secrets.yml
+    inputs:
+      stage: e2e-tests:pre
+      identifier: pcp-w3rxsrj-dc4-a
+      vault_addr: $VAULT_ADDR
+      vault_approle_id: $VAULT_APPROLE_ID
+      vault_approle_secret_id: $VAULT_APPROLE_SECRET_ID
+      vault_secrets: |
+        kv/data/infrastructure/openstack/regions/dc4_a auth_url | OS_AUTH_URL
+        kv/data/infrastructure/openstack/regions/dc4_a identity_api_version | OS_IDENTITY_API_VERSION
+        kv/data/infrastructure/openstack/regions/dc4_a region_name | OS_REGION_NAME
+        kv/data/infrastructure/openstack/projects/pcp_w3rxsrj/users/tofu application_credential_id | OS_APPLICATION_CREDENTIAL_ID
+        kv/data/infrastructure/openstack/projects/pcp_w3rxsrj/users/tofu application_credential_secret | OS_APPLICATION_CREDENTIAL_SECRET
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'

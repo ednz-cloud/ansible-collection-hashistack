@@ -10,5 +10,13 @@ consul_config.yml
 **/secrets/vault.yml
 **/.ansible-vault
 
+tests/output
+
+.ruff_cache
+
 # ignore local ansible test files
 .ansible
+.env
+
+# ignore gitlab-ci-local files
+.gitlab-ci-local-variables.yml

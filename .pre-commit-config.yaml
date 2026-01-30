@@ -1,7 +1,11 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/pre-commit-config.json
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -11,10 +15,32 @@ repos:
       - id: yamllint
         args: [-c=./.yamllint]
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.24.0
+    rev: v3.29.0
     hooks:
       - id: commitizen
       - id: commitizen-branch
         stages:
           - post-commit
           - push
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.14
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.26
+    hooks:
+      - id: uv-lock
+        name: check uv lockfile
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.36.0
+    hooks:
+      - id: check-gitlab-ci
+        name: validate gitlab-ci workflows
+        files: >
+          (?x)^(
+            .*\.gitlab-ci\.(yml|yaml)|
+            \.gitlab-ci/actions/[^/]+|
+            \.gitlab-ci/workflows/[^/]+
+          )$

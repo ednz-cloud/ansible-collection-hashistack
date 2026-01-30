@@ -1,5 +1,4 @@
 ---
-# Based on ansible-lint config
 extends: default
 
 rules:
@@ -15,7 +14,10 @@ rules:
   commas:
     max-spaces-after: -1
     level: error
-  comments: enable
+  comments:
+    require-starting-space: true
+    ignore-shebangs: true
+    min-spaces-from-content: 1
   comments-indentation: disable
   document-start: enable
   empty-lines:
@@ -26,15 +28,14 @@ rules:
   indentation: enable
   key-duplicates: enable
   line-length:
-    max: 80
-    level: warning
+    max: 140
   new-line-at-end-of-file: enable
   new-lines:
     type: unix
+  octal-values:
+    forbid-implicit-octal: true
   trailing-spaces: enable
   truthy:
     allowed-values:
-      - 'true'
-      - 'false'
-      - 'yes'
-      - 'no'
+      - "true"
+      - "false"

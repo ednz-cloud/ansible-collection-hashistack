@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json
+include:
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/cz-commit-check.yml
+    inputs:
+      stage: gate
+      commit-message: $CI_COMMIT_MESSAGE
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH !~ /^master|main$/'
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/cz-commit-check-range.yml
+    inputs:
+      stage: gate
+      rev-range: origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME..
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'

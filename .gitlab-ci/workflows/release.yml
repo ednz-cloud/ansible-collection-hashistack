@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json
+include:
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/vault-get-secrets.yml
+    inputs:
+      stage: release:pre
+      identifier: release
+      vault_addr: $VAULT_ADDR
+      vault_approle_id: $VAULT_APPROLE_ID
+      vault_approle_secret_id: $VAULT_APPROLE_SECRET_ID
+      vault_secrets: |
+        kv/data/applications/gitlab/bots/ednz_cloud_bot ssh_private_key | RELEASE_SSH_PRIVATE_KEY:base64
+      artifacts_expire_in: 20 mins
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^master|main$/ && $CI_COMMIT_MESSAGE  !~ /^bump:(.?)*/'
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/cz-do-release.yml
+    inputs:
+      stage: release
+      git_user_name: "EDNZ Cloud Bot"
+      git_user_email: "gitlab-runnner@ednz.fr"
+      git_ssh_private_key: $RELEASE_SSH_PRIVATE_KEY
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+          variables:
+            DRY_RUN: "true"
+        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^master|main$/ && $CI_COMMIT_MESSAGE  !~ /^bump:(.?)*/'
+      needs:
+        - job: release:pre:vault:get-secrets:release
+          artifacts: true

@@ -1,0 +1,25 @@
+[project]
+name = "ednz_cloud.hashistack"
+version = "0.13.4"
+description = "ednz_cloud.hashistack Ansible collection"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "ansible-core>=2.17,<2.19",
+  "ansible-lint>=26.1.1",
+  "hvac>=2.4.0",
+  "molecule>=25.12.0",
+  "molecule-plugins>=25.8.12",
+  "openstacksdk>=4.9.0",
+  "yamllint>=1.38.0",
+]
+
+[dependency-groups]
+pre-commit = ["pre-commit>=4.5.1"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "scm"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_files = ["pyproject.toml:^version", "galaxy.yml:^version"]
