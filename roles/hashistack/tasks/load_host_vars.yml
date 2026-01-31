@@ -1,15 +1,15 @@
 ---
-# task/load_host_vars file for hashistack
-- name: "Variables | Stat host specific config file"
+- name: "load_host_vars | Stat host specific config file"
   ansible.builtin.stat:
-    path: "{{ hashistack_configuration_directory }}/{{ group_name }}/{{ inventory_hostname }}/{{ hashistack_configuration_global_vars_file }}"
+    path: "{{ hashistack_configuration_directory }}/\
+      {{ group_name }}/{{ inventory_hostname }}/{{ hashistack_configuration_global_vars_file }}"
   register: _host_config_file
   loop: "{{ group_names }}"
   loop_control:
     loop_var: group_name
   delegate_to: localhost
 
-- name: "Variables | Load host specific variables"
+- name: "load_host_vars | Load host specific variables"
   ansible.builtin.include_vars:
     dir: "{{ hashistack_configuration_directory }}/{{ item.group_name }}/{{ inventory_hostname }}"
     files_matching: "{{ hashistack_configuration_global_vars_file }}"

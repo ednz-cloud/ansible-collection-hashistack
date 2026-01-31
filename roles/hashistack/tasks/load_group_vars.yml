@@ -1,6 +1,5 @@
 ---
-# task/load_group_vars file for hashistack
-- name: "Variables | Stat group specific config file"
+- name: "load_group_vars | Stat group specific config file"
   ansible.builtin.stat:
     path: "{{ hashistack_configuration_directory }}/{{ group_name }}/{{ hashistack_configuration_global_vars_file }}"
   register: _group_config_file
@@ -9,7 +8,7 @@
     loop_var: group_name
   delegate_to: localhost
 
-- name: "Variables | Load group specific variables"
+- name: "load_group_vars | Load group specific variables"
   ansible.builtin.include_vars:
     dir: "{{ hashistack_configuration_directory }}/{{ item.group_name }}"
     files_matching: "{{ hashistack_configuration_global_vars_file }}"

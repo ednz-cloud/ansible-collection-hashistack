@@ -1,12 +1,11 @@
 ---
-# task/main file for cni
-- name: "CNI Plugins | Import prerequisites.yml"
+- name: "Import prerequisites.yml"
   ansible.builtin.include_tasks: prerequisites.yml
 
-- name: "CNI Plugins | Import cni_install.yml"
+- name: "Import cni_install.yml"
   ansible.builtin.include_tasks: cni_install.yml
 
-- name: "CNI Plugins | Import consul_cni_install.yml"
+- name: "Import consul_cni_install.yml"
   ansible.builtin.include_tasks: consul_cni_install.yml
   when:
     - cni_plugins_install_consul_cni

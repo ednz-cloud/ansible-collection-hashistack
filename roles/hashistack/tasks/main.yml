@@ -1,17 +1,16 @@
 ---
-# task/main file for hashistack
-- name: "Variables | Load global variables"
+- name: "Load global variables"
   ansible.builtin.include_tasks: load_global_vars.yml
   when: not hashistack_only_load_credentials
 
-- name: "Variables | Load credentials variables"
+- name: "Load credentials variables"
   ansible.builtin.include_tasks: load_credentials_vars.yml
 
-- name: "Variables | Load group specific variables"
+- name: "Load group specific variables"
   ansible.builtin.include_tasks: load_group_vars.yml
   when: not hashistack_only_load_credentials
 
-- name: "Variables | Load host specific variables"
+- name: "Load host specific variables"
   ansible.builtin.include_tasks: load_host_vars.yml
   when: not hashistack_only_load_credentials
 
@@ -21,12 +20,12 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   loop:
     - "{{ hashistack_remote_config_dir }}"
     - "{{ hashistack_remote_log_dir }}"
   when: not hashistack_only_load_credentials
 
-- name: "Variables | Load custom CA certificates"
+- name: "Load custom CA certificates"
   ansible.builtin.include_tasks: load_ca_certificates.yml
   when: not hashistack_only_load_credentials
