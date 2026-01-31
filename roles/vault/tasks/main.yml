@@ -1,42 +1,41 @@
 ---
-# task/main file for vault
-- name: "Vault | Set reload-check & restart-check variable"
+- name: "Set reload-check & restart-check variable"
   ansible.builtin.set_fact:
     _vault_service_need_daemon_reload: false
     _vault_service_need_reload: false
     _vault_service_need_restart: false
 
-- name: "Vault | Import merge_variables.yml"
+- name: "Import merge_variables.yml"
   ansible.builtin.include_tasks: merge_variables.yml
 
-- name: "Vault | Import prerequisites.yml"
+- name: "Import prerequisites.yml"
   ansible.builtin.include_tasks: prerequisites.yml
 
-- name: "Vault | Import install.yml"
+- name: "Import install.yml"
   ansible.builtin.include_tasks: "install.yml"
 
-- name: "Vault | Import configure.yml"
+- name: "Import configure.yml"
   ansible.builtin.include_tasks: configure.yml
 
-- name: "Vault | Populate service facts"
+- name: "Populate service facts"
   ansible.builtin.service_facts:
 
-- name: "Vault | Set restart-check variable"
+- name: "Set restart-check variable"
   ansible.builtin.set_fact:
     _vault_service_need_restart: true
   when: ansible_facts.services[vault_service_name~'.service'].state != 'running'
 
-- name: "Vault | Enable service: {{ vault_service_name }}"
+- name: "Enable service: {{ vault_service_name }}"
   ansible.builtin.service:
     name: "{{ vault_service_name }}"
     enabled: true
 
-- name: "Vault | Reload systemd daemon"
+- name: "Reload systemd daemon"
   ansible.builtin.systemd:
     daemon_reload: true
   when: _vault_service_need_daemon_reload
 
-- name: "Vault | Start service: {{ vault_service_name }}"
+- name: "Start service: {{ vault_service_name }}"
   ansible.builtin.include_tasks: rolling_restart.yml
   when:
     - vault_start_service
@@ -46,7 +45,7 @@
   loop_control:
     loop_var: host_item
 
-- name: "Vault | Reload service: {{ vault_service_name }}"
+- name: "Reload service: {{ vault_service_name }}"
   ansible.builtin.service:
     name: "{{ vault_service_name }}"
     state: reloaded

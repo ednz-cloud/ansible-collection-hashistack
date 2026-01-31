@@ -1,8 +1,7 @@
 ---
-# task/merge_variables file for vault
-- name: "Vault | Merge listener configuration"
+- name: "merge_variables | Merge listener configuration"
   block:
-    - name: "Vault | Merge tls listener configuration"
+    - name: "merge_variables | Merge tls listener configuration"
       vars:
         _config_to_merge: "{{ vault_tls_listener_configuration }}"
       ansible.builtin.set_fact:
@@ -15,7 +14,7 @@
           }}
       when: vault_enable_tls
 
-    - name: "Vault | Merge extra listener configuration"
+    - name: "merge_variables | Merge extra listener configuration"
       vars:
         _config_to_merge: "{{ vault_extra_listener_configuration }}"
       ansible.builtin.set_fact:
@@ -25,7 +24,7 @@
             vault_extra_listener_configuration
           }}
 
-    - name: "Vault | Add certificates directory to extra_files_dir"
+    - name: "merge_variables | Add certificates directory to extra_files_dir"
       ansible.builtin.set_fact:
         vault_extra_files_list: "{{
           vault_extra_files_list +
@@ -35,7 +34,7 @@
           }}"
       when: vault_enable_tls
 
-- name: "Vault | Merge service registration configuration"
+- name: "merge_variables | Merge service registration configuration"
   vars:
     _config_to_merge:
       service_registration: "{{ vault_service_registration_configuration }}"
@@ -46,7 +45,7 @@
       }}"
   when: vault_enable_service_registration
 
-- name: "Vault | Merge plugins configuration"
+- name: "merge_variables | Merge plugins configuration"
   vars:
     _config_to_merge:
       plugin_directory: "{{ vault_plugins_directory }}"
@@ -57,7 +56,7 @@
       }}"
   when: vault_enable_plugins
 
-- name: "Vault | Merge logging configuration"
+- name: "merge_variables | Merge logging configuration"
   vars:
     _config_to_merge: "{{ vault_log_to_file_configuration }}"
   ansible.builtin.set_fact:
@@ -67,7 +66,7 @@
       }}"
   when: vault_enable_log_to_file
 
-- name: "Vault | Merge extra configuration settings"
+- name: "merge_variables | Merge extra configuration settings"
   vars:
     _config_to_merge: "{{ vault_extra_configuration }}"
   ansible.builtin.set_fact:

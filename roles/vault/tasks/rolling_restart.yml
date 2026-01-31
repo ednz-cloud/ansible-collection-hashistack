@@ -1,11 +1,10 @@
 ---
-# task/rolling_restart file for vault
-- name: "Vault | Start service: {{ vault_service_name }}"
+- name: "rolling_restart | Start service: {{ vault_service_name }}"
   ansible.builtin.service:
     name: "{{ vault_service_name }}"
     state: restarted
 
-- name: "Vault | Unseal node"
+- name: "rolling_restart | Unseal node"
   ednz_cloud.hashistack.vault_unseal:
     api_url: "{{ vault_unseal_url }}"
     tls_verify: "{{ vault_unseal_tls_verify }}"

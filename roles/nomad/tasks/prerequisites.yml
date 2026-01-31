@@ -1,18 +1,18 @@
 ---
 # task/prerequisites file for nomad
-- name: "Nomad | Create group {{ nomad_group }}"
+- name: "prerequisites | Create group {{ nomad_group }}"
   ansible.builtin.group:
     name: "{{ nomad_user }}"
     state: present
 
-- name: "Nomad | Create user {{ nomad_user }}"
+- name: "prerequisites | Create user {{ nomad_user }}"
   ansible.builtin.user:
     name: "{{ nomad_user }}"
     group: "{{ nomad_group }}"
     shell: /bin/false
     state: present
 
-- name: "Nomad | Create directory {{ nomad_config_dir }}"
+- name: "prerequisites | Create directory {{ nomad_config_dir }}"
   ansible.builtin.file:
     path: "{{ nomad_config_dir }}"
     state: directory
@@ -20,7 +20,7 @@
     group: "{{ nomad_group }}"
     mode: "0755"
 
-- name: "Nomad | Create directory {{ nomad_data_dir }}"
+- name: "prerequisites | Create directory {{ nomad_data_dir }}"
   ansible.builtin.file:
     path: "{{ nomad_data_dir }}"
     state: directory
@@ -28,7 +28,7 @@
     group: "{{ nomad_group }}"
     mode: "0755"
 
-- name: "Nomad | Create directory {{ nomad_certs_dir }}"
+- name: "prerequisites | Create directory {{ nomad_certs_dir }}"
   ansible.builtin.file:
     path: "{{ nomad_certs_dir }}"
     state: directory
@@ -36,7 +36,7 @@
     group: "{{ nomad_group }}"
     mode: "0755"
 
-- name: "Nomad | Create directory {{ nomad_logs_dir }}"
+- name: "prerequisites | Create directory {{ nomad_logs_dir }}"
   ansible.builtin.file:
     path: "{{ nomad_logs_dir }}"
     state: directory

@@ -1,6 +1,5 @@
 ---
-# task/configure file for vault
-- name: "Vault | Create vault.env"
+- name: "configure | Create vault.env"
   ansible.builtin.template:
     src: vault.env.j2
     dest: "{{ vault_config_dir }}/vault.env"
@@ -9,7 +8,7 @@
     mode: "0600"
   register: _vault_env_file
 
-- name: "Vault | Copy vault.json template"
+- name: "configure | Copy vault.json template"
   ansible.builtin.template:
     src: vault.json.j2
     dest: "{{ vault_config_dir }}/vault.json"
@@ -18,13 +17,13 @@
     mode: "0600"
   register: _vault_config_file
 
-- name: "Vault | Set restart-check variable"
+- name: "configure | Set restart-check variable"
   ansible.builtin.set_fact:
     _vault_service_need_restart: true
   when: _vault_env_file.changed or
     _vault_config_file.changed
 
-- name: "Vault | Gather initial checksums for certificate files"
+- name: "configure | Gather initial checksums for certificate files"
   ansible.builtin.stat:
     path: "{{ item }}"
     checksum_algorithm: sha1
@@ -32,7 +31,7 @@
   when: vault_enable_tls
   register: _vault_initial_cert_checksums
 
-- name: "Vault | Normalize initial checksums"
+- name: "configure | Normalize initial checksums"
   ansible.builtin.set_fact:
     # This needs to be optimized, but I have spent so much time on it not
     # working that I will keep it as is for now, and we'll see later.
@@ -47,17 +46,17 @@
       {{ ns.checksums }}
   when: vault_enable_tls
 
-- name: "Vault | Copy extra configuration files"
+- name: "configure | Copy extra configuration files"
   when: vault_extra_files
   block:
-    - name: "Vault | Get extra file types"
+    - name: "configure | Get extra file types"
       ansible.builtin.stat:
         path: "{{ item.src }}"
       loop: "{{ vault_extra_files_list }}"
       register: vault_extra_file_stat
       delegate_to: localhost
 
-    - name: "Vault | Set list for file sources"
+    - name: "configure | Set list for file sources"
       vars:
         _vault_file_sources: []
       ansible.builtin.set_fact:
@@ -68,7 +67,7 @@
         loop_var: item
       delegate_to: localhost
 
-    - name: "Vault | Set list for directory sources"
+    - name: "configure | Set list for directory sources"
       vars:
         _vault_dir_sources: []
       ansible.builtin.set_fact:
@@ -79,7 +78,7 @@
         loop_var: item
       delegate_to: localhost
 
-    - name: "Vault | Template extra file sources"
+    - name: "configure | Template extra file sources"
       ansible.builtin.template:
         src: "{{ item.src }}"
         dest: "{{ item.dest | regex_replace('\\.j2$', '') }}"
@@ -89,14 +88,14 @@
       loop: "{{ _vault_file_sources }}"
       when: _vault_file_sources is defined
 
-    - name: "Vault | Template extra directory sources"
+    - name: "configure | Template extra directory sources"
       ansible.builtin.include_tasks: recursive_copy_extra_dirs.yml
       loop: "{{ _vault_dir_sources }}"
       loop_control:
         loop_var: dir_source_item
       when: _vault_dir_sources is defined
 
-- name: "Vault | Gather final checksums for certificate files"
+- name: "configure | Gather final checksums for certificate files"
   ansible.builtin.stat:
     path: "{{ item }}"
     checksum_algorithm: sha1
@@ -104,7 +103,7 @@
   when: vault_enable_tls
   register: _vault_final_cert_checksums
 
-- name: "Vault | Normalize final checksums"
+- name: "configure | Normalize final checksums"
   ansible.builtin.set_fact:
     # This needs to be optimized, but I have spent so much time on it not
     # working that I will keep it as is for now, and we'll see later.
@@ -119,7 +118,7 @@
       {{ ns.checksums }}
   when: vault_enable_tls
 
-- name: "Vault | Merge initial and final checksum lists"
+- name: "configure | Merge initial and final checksum lists"
   ansible.builtin.set_fact:
     _vault_checksums_list: >-
       {{
@@ -128,7 +127,7 @@
       }}
   when: vault_enable_tls
 
-- name: "Vault | Determine if certificates have changed or were newly added"
+- name: "configure | Determine if certificates have changed or were newly added"
   ansible.builtin.set_fact:
     _vault_service_need_reload: true
   when:

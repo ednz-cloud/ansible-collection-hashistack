@@ -1,18 +1,17 @@
 ---
-# task/prerequisites file for vault
-- name: "Vault | Create group {{ vault_group }}"
+- name: "prerequisites | Create group {{ vault_group }}"
   ansible.builtin.group:
     name: "{{ vault_group }}"
     state: present
 
-- name: "Vault | Create user {{ vault_user }}"
+- name: "prerequisites | Create user {{ vault_user }}"
   ansible.builtin.user:
     name: "{{ vault_user }}"
     group: "{{ vault_group }}"
     shell: /bin/false
     state: present
 
-- name: "Vault | Create directory {{ vault_config_dir }}"
+- name: "prerequisites | Create directory {{ vault_config_dir }}"
   ansible.builtin.file:
     path: "{{ vault_config_dir }}"
     state: directory
@@ -20,7 +19,7 @@
     group: "{{ vault_group }}"
     mode: "0755"
 
-- name: "Vault | Create directory {{ vault_data_dir}}"
+- name: "prerequisites | Create directory {{ vault_data_dir}}"
   ansible.builtin.file:
     path: "{{ vault_data_dir }}"
     state: directory
@@ -28,7 +27,7 @@
     group: "{{ vault_group }}"
     mode: "0755"
 
-- name: "Vault | Create directory {{ vault_certs_dir }}"
+- name: "prerequisites | Create directory {{ vault_certs_dir }}"
   ansible.builtin.file:
     path: "{{ vault_certs_dir }}"
     state: directory
@@ -36,7 +35,7 @@
     group: "{{ vault_group }}"
     mode: "0755"
 
-- name: "Vault | Create directory {{ vault_logs_dir }}"
+- name: "prerequisites | Create directory {{ vault_logs_dir }}"
   ansible.builtin.file:
     path: "{{ vault_logs_dir }}"
     state: directory

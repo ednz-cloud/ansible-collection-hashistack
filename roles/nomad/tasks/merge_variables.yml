@@ -1,6 +1,6 @@
 ---
 # task/merge_variables file for nomad
-- name: "Nomad | Merge stringified configuration"
+- name: "merge_variables | Merge stringified configuration"
   vars:
     _config_to_merge: "{{ nomad_configuration_string }}"
   ansible.builtin.set_fact:
@@ -9,7 +9,7 @@
       combine(_config_to_merge|from_yaml, recursive=true)
       }}"
 
-- name: "Nomad | Merge addresses configuration"
+- name: "merge_variables | Merge addresses configuration"
   vars:
     _config_to_merge: "{{ nomad_address_configuration }}"
   ansible.builtin.set_fact:
@@ -18,16 +18,16 @@
       combine(_config_to_merge, recursive=true)
       }}"
 
-- name: "Nomad | Merge consul integration configuration"
+- name: "merge_variables | Merge consul integration configuration"
   when:
     - nomad_enable_consul_integration | bool
   block:
-    - name: "Nomad | Merge consul tls configuration"
+    - name: "merge_variables | Merge consul tls configuration"
       when:
         - nomad_consul_integration_configuration.ssl is defined
         - nomad_consul_integration_configuration.ssl | bool
       block:
-        - name: "Nomad | Merge consul default client configuration"
+        - name: "merge_variables | Merge consul default client configuration"
           vars:
             _config_to_merge: "{{ nomad_consul_integration_tls_configuration }}"
           ansible.builtin.set_fact:
@@ -36,11 +36,11 @@
               combine(_config_to_merge, recursive=true)
               }}"
 
-    - name: "Nomad | Merge consul configuration for nomad servers"
+    - name: "merge_variables | Merge consul configuration for nomad servers"
       when:
         - nomad_enable_server
       block:
-        - name: "Nomad | Merge consul default server configuration"
+        - name: "merge_variables | Merge consul default server configuration"
           vars:
             _config_to_merge: "{{ nomad_consul_integration_server_configuration }}"
           ansible.builtin.set_fact:
@@ -49,11 +49,11 @@
               combine(_config_to_merge, recursive=true)
               }}"
 
-    - name: "Nomad | Merge consul configuration for nomad clients"
+    - name: "merge_variables | Merge consul configuration for nomad clients"
       when:
         - nomad_enable_client
       block:
-        - name: "Nomad | Merge consul default client configuration"
+        - name: "merge_variables | Merge consul default client configuration"
           vars:
             _config_to_merge: "{{ nomad_consul_integration_client_configuration }}"
           ansible.builtin.set_fact:
@@ -62,7 +62,7 @@
               combine(_config_to_merge, recursive=true)
               }}"
 
-        - name: "Nomad | Merge consul tls client configuration"
+        - name: "merge_variables | Merge consul tls client configuration"
           vars:
             _config_to_merge: "{{ nomad_consul_integration_client_tls_configuration }}"
           ansible.builtin.set_fact:
@@ -74,7 +74,7 @@
             - nomad_consul_integration_configuration.ssl is defined
             - nomad_consul_integration_configuration.ssl | bool
 
-    - name: "Nomad | Merge consul block into main configuration"
+    - name: "merge_variables | Merge consul block into main configuration"
       vars:
         _config_to_merge:
           consul: "{{ nomad_consul_integration_configuration }}"
@@ -84,7 +84,7 @@
           combine(_config_to_merge, recursive=true)
           }}"
 
-- name: "Nomad | Merge vault block into main configuration"
+- name: "merge_variables | Merge vault block into main configuration"
   vars:
     _config_to_merge:
       vault: "{{ nomad_vault_integration_configuration }}"
@@ -95,10 +95,10 @@
       }}"
   when: nomad_enable_vault_integration | bool
 
-- name: "Nomad | Merge TLS configuration"
+- name: "merge_variables | Merge TLS configuration"
   when: nomad_enable_tls | bool
   block:
-    - name: "Nomad | Merge TLS configuration"
+    - name: "merge_variables | Merge TLS configuration"
       vars:
         _config_to_merge:
           tls: "{{ nomad_tls_configuration }}"
@@ -108,7 +108,7 @@
           combine(_config_to_merge, recursive=true)
           }}"
 
-    - name: "Nomad | Add certificates directory to extra_files_dir"
+    - name: "merge_variables | Add certificates directory to extra_files_dir"
       ansible.builtin.set_fact:
         nomad_extra_files_list: "{{
           nomad_extra_files_list +
@@ -117,7 +117,7 @@
           | sort
           }}"
 
-- name: "Nomad | Merge plugin configuration"
+- name: "merge_variables | Merge plugin configuration"
   vars:
     _config_to_merge:
       plugin: "{{
@@ -131,7 +131,7 @@
       }}"
   when: nomad_enable_client | bool
 
-- name: "Nomad | Merge extra configuration settings"
+- name: "merge_variables | Merge extra configuration settings"
   vars:
     _config_to_merge: "{{ nomad_extra_configuration }}"
   ansible.builtin.set_fact:
@@ -140,7 +140,7 @@
       combine(_config_to_merge, recursive=true)
       }}"
 
-- name: "Nomad | Merge log to file configuration"
+- name: "merge_variables | Merge log to file configuration"
   vars:
     _config_to_merge: "{{ nomad_log_to_file_configuration }}"
   ansible.builtin.set_fact:
@@ -150,7 +150,7 @@
       }}"
   when: nomad_enable_log_to_file
 
-- name: "Nomad | Merge telemetry configuration"
+- name: "merge_variables | Merge telemetry configuration"
   vars:
     _config_to_merge:
       telemetry: "{{ nomad_telemetry_configuration }}"

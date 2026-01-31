@@ -1,6 +1,0 @@
----
-# requirements file for ednz_cloud.hashistack
-collections:
-  - name: https://github.com/ednz-cloud/ansible-collection-utils.git
-    type: git
-    version: v0.10.0

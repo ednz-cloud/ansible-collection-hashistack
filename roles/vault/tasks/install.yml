@@ -1,33 +1,32 @@
 ---
-# task/install file for vault
-- name: "Vault | Get latest release of vault"
+- name: "install | Get latest release of vault"
   when: vault_version == 'latest'
   block:
-    - name: "Vault | Get latest vault release from github api"
+    - name: "install | Get latest vault release from github api"
       ansible.builtin.uri:
         url: "{{ vault_github_api }}/hashicorp/vault/releases/latest"
         return_content: true
       register: _vault_latest_release
 
-    - name: "Vault | Set wanted vault version to latest tag"
+    - name: "install | Set wanted vault version to latest tag"
       ansible.builtin.set_fact:
         _vault_wanted_version: "{{ _vault_latest_release.json['tag_name']|regex_replace('v', '') }}"
 
-- name: "Vault | Set wanted vault version to {{ vault_version }}"
+- name: "install | Set wanted vault version to {{ vault_version }}"
   ansible.builtin.set_fact:
     _vault_wanted_version: "{{ vault_version|regex_replace('v', '') }}"
   when: vault_version != 'latest'
 
-- name: "Vault | Get current vault version"
+- name: "install | Get current vault version"
   block:
-    - name: "Vault | Stat vault version file"
+    - name: "install | Stat vault version file"
       ansible.builtin.stat:
         path: "{{ vault_config_dir }}/.version"
       changed_when: false
       check_mode: false
       register: _vault_version_file
 
-    - name: "Vault | Get current vault version"
+    - name: "install | Get current vault version"
       ansible.builtin.slurp:
         src: "{{ _vault_version_file.stat.path }}"
       when:
@@ -35,20 +34,20 @@
         - _vault_version_file.stat.isreg
       register: _vault_current_version
 
-- name: "Vault | Download and install vault binary"
+- name: "install | Download and install vault binary"
   when:
     - _vault_current_version is not defined
       or _vault_wanted_version != (_vault_current_version.content|default('')|b64decode)
     - not ansible_check_mode
   block:
-    - name: "Vault | Set vault package name to download"
+    - name: "install | Set vault package name to download"
       ansible.builtin.set_fact:
         _vault_package_name: >-
           vault_{{ _vault_wanted_version }}_linux_{{ vault_deb_architecture_map[ansible_architecture] }}.zip
         _vault_shasum_file_name: >-
           vault_{{ _vault_wanted_version }}_SHA256SUMS
 
-    - name: "Vault | Download checksum file for vault archive"
+    - name: "install | Download checksum file for vault archive"
       ansible.builtin.get_url:
         url: "{{ vault_repository_url }}/{{ _vault_wanted_version }}/{{ _vault_shasum_file_name }}"
         dest: "/tmp/{{ _vault_shasum_file_name }}"
@@ -59,17 +58,17 @@
       delay: 2
       check_mode: false
 
-    - name: "Vault | Extract correct checksum from checksum file"
+    - name: "install | Extract correct checksum from checksum file"
       ansible.builtin.command:
         cmd: 'grep "{{ _vault_package_name }}" /tmp/{{ _vault_shasum_file_name }}'
       changed_when: false
       register: _vault_expected_checksum_line
 
-    - name: "Vault | Parse the expected checksum"
+    - name: "install | Parse the expected checksum"
       ansible.builtin.set_fact:
         _vault_expected_checksum: "{{ _vault_expected_checksum_line.stdout.split()[0] }}"
 
-    - name: "Vault | Download vault binary archive"
+    - name: "install | Download vault binary archive"
       ansible.builtin.get_url:
         url: "{{ vault_repository_url }}/{{ _vault_wanted_version }}/{{ _vault_package_name }}"
         dest: "/tmp/{{ _vault_package_name }}"
@@ -80,13 +79,13 @@
       retries: 5
       delay: 2
 
-    - name: "Vault | Create temporary directory for archive decompression"
+    - name: "install | Create temporary directory for archive decompression"
       ansible.builtin.file:
         path: /tmp/vault
         state: directory
         mode: "0755"
 
-    - name: "Vault | Unpack vault archive"
+    - name: "install | Unpack vault archive"
       ansible.builtin.unarchive:
         src: "/tmp/{{ _vault_package_name }}"
         dest: "/tmp/vault"
@@ -95,7 +94,7 @@
         mode: "0755"
         remote_src: true
 
-    - name: "Vault | Copy vault binary to {{ vault_binary_path }}"
+    - name: "install | Copy vault binary to {{ vault_binary_path }}"
       ansible.builtin.copy:
         src: /tmp/vault/vault
         dest: "{{ vault_binary_path }}"
@@ -105,7 +104,7 @@
         remote_src: true
         force: true
 
-    - name: "Vault | Update vault version file"
+    - name: "install | Update vault version file"
       ansible.builtin.copy:
         content: "{{ _vault_wanted_version }}"
         dest: "{{ vault_config_dir }}/.version"
@@ -113,11 +112,11 @@
         group: "{{ vault_group }}"
         mode: "0600"
 
-    - name: "Vault | Set restart-check variable"
+    - name: "install | Set restart-check variable"
       ansible.builtin.set_fact:
         _vault_service_need_restart: true
 
-    - name: "Vault | Cleanup temporary directory"
+    - name: "install | Cleanup temporary directory"
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent
@@ -126,7 +125,7 @@
         - /tmp/{{ _vault_package_name }}
         - /tmp/{{ _vault_shasum_file_name }}
 
-- name: "Vault | Copy systemd service file for vault"
+- name: "install | Copy systemd service file for vault"
   ansible.builtin.template:
     src: "vault.service.j2"
     dest: "/etc/systemd/system/{{ vault_service_name }}.service"
@@ -135,13 +134,13 @@
     mode: "0644"
   register: _vault_unit_file
 
-- name: "Vault | Set reload-check & restart-check variable"
+- name: "install | Set reload-check & restart-check variable"
   ansible.builtin.set_fact:
     _vault_service_need_daemon_reload: true
     _vault_service_need_restart: true
   when: _vault_unit_file.changed # noqa: no-handler
 
-- name: "Vault | Copy systemd service file for vault"
+- name: "install | Copy systemd service file for vault"
   ansible.builtin.template:
     src: "vault.service.j2"
     dest: "/etc/systemd/system/vault.service"

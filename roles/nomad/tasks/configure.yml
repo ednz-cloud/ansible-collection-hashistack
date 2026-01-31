@@ -1,6 +1,5 @@
 ---
-# task/configure file for nomad
-- name: "Nomad | Create nomad.env"
+- name: "configure | Create nomad.env"
   ansible.builtin.template:
     src: nomad.env.j2
     dest: "{{ nomad_config_dir }}/nomad.env"
@@ -9,7 +8,7 @@
     mode: "0600"
   register: _nomad_env_file
 
-- name: "Nomad | Copy nomad.json template"
+- name: "configure | Copy nomad.json template"
   ansible.builtin.template:
     src: nomad.json.j2
     dest: "{{ nomad_config_dir }}/nomad.json"
@@ -18,13 +17,13 @@
     mode: "0600"
   register: _nomad_config_file
 
-- name: "Nomad | Set restart-check variable"
+- name: "configure | Set restart-check variable"
   ansible.builtin.set_fact:
     _nomad_service_need_restart: true
   when: _nomad_env_file.changed or
     _nomad_config_file.changed
 
-- name: "Nomad | Gather initial checksums for certificate files"
+- name: "configure | Gather initial checksums for certificate files"
   ansible.builtin.stat:
     path: "{{ item }}"
     checksum_algorithm: sha1
@@ -32,7 +31,7 @@
   when: nomad_enable_tls
   register: _nomad_initial_cert_checksums
 
-- name: "Nomad | Normalize initial checksums"
+- name: "configure | Normalize initial checksums"
   ansible.builtin.set_fact:
     # This needs to be optimized, but I have spent so much time on it not
     # working that I will keep it as is for now, and we'll see later.
@@ -47,17 +46,17 @@
       {{ ns.checksums }}
   when: nomad_enable_tls
 
-- name: "Nomad | Copy extra configuration files"
+- name: "configure | Copy extra configuration files"
   when: nomad_extra_files
   block:
-    - name: "Nomad | Get extra file types"
+    - name: "configure | Get extra file types"
       ansible.builtin.stat:
         path: "{{ item.src }}"
       loop: "{{ nomad_extra_files_list }}"
       register: nomad_extra_file_stat
       delegate_to: localhost
 
-    - name: "Nomad | Set list for file sources"
+    - name: "configure | Set list for file sources"
       vars:
         _nomad_file_sources: []
       ansible.builtin.set_fact:
@@ -68,7 +67,7 @@
         loop_var: item
       delegate_to: localhost
 
-    - name: "Nomad | Set list for directory sources"
+    - name: "configure | Set list for directory sources"
       vars:
         _nomad_dir_sources: []
       ansible.builtin.set_fact:
@@ -79,7 +78,7 @@
         loop_var: item
       delegate_to: localhost
 
-    - name: "Nomad | Template extra file sources"
+    - name: "configure | Template extra file sources"
       ansible.builtin.template:
         src: "{{ item.src }}"
         dest: "{{ item.dest | regex_replace('\\.j2$', '') }}"
@@ -89,14 +88,14 @@
       loop: "{{ _nomad_file_sources }}"
       when: _nomad_file_sources is defined
 
-    - name: "Nomad | Template extra directory sources"
+    - name: "configure | Template extra directory sources"
       ansible.builtin.include_tasks: recursive_copy_extra_dirs.yml
       loop: "{{ _nomad_dir_sources }}"
       loop_control:
         loop_var: dir_source_item
       when: _nomad_dir_sources is defined
 
-- name: "Nomad | Gather final checksums for certificate files"
+- name: "configure | Gather final checksums for certificate files"
   ansible.builtin.stat:
     path: "{{ item }}"
     checksum_algorithm: sha1
@@ -104,7 +103,7 @@
   when: nomad_enable_tls
   register: _nomad_final_cert_checksums
 
-- name: "Nomad | Normalize final checksums"
+- name: "configure | Normalize final checksums"
   ansible.builtin.set_fact:
     # This needs to be optimized, but I have spent so much time on it not
     # working that I will keep it as is for now, and we'll see later.
@@ -119,7 +118,7 @@
       {{ ns.checksums }}
   when: nomad_enable_tls
 
-- name: "Nomad | Merge initial and final checksum lists"
+- name: "configure | Merge initial and final checksum lists"
   ansible.builtin.set_fact:
     _nomad_checksums_list: >-
       {{
@@ -128,7 +127,7 @@
       }}
   when: nomad_enable_tls
 
-- name: "Nomad | Determine if certificates have changed or were newly added"
+- name: "configure | Determine if certificates have changed or were newly added"
   ansible.builtin.set_fact:
     _nomad_service_need_reload: true
   when:
