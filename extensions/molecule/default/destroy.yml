@@ -1,0 +1,3 @@
+---
+- name: Destroy OpenStack instances
+  ansible.builtin.import_playbook: ednz_cloud.utils.molecule_openstack_destroy

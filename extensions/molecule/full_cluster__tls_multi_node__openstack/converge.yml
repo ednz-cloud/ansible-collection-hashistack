@@ -1,0 +1,5 @@
+---
+- name: Include deploy playbook
+  ansible.builtin.import_playbook: ednz_cloud.hashistack.deploy.yml
+  vars:
+    hashistack_configuration_directory: "{{ molecule_scenario_directory }}/etc/hashistack"

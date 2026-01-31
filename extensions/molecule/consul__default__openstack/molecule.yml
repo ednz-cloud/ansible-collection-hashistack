@@ -1,0 +1,24 @@
+---
+platforms:
+  - name: molecule__consul__default__openstack.ednz.fr
+    description: Molecule test instance.
+    flavor: a2-ram4-disk20-perf1
+    image: ${MOLECULE_TEST_OS:-"Debian 13 trixie"}
+    user: ${MOLECULE_TEST_USER:-"debian"}
+    auto_ip: false
+    network:
+      name: pcp-w3rxsrj-backend-network
+      create: false
+    security_group:
+      name: molecule__consul__default__openstack
+      create: true
+      description: Molecule test security group.
+      rules:
+        - proto: tcp
+          port: -1
+          port_min: 0
+          port_max: 0
+          cidr: 0.0.0.0/0
+          type: IPv4
+scenario:
+  name: consul__default__openstack

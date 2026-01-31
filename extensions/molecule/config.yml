@@ -1,0 +1,32 @@
+---
+driver:
+  name: default
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+    requirements-file: requirements.yml
+provisioner:
+  name: ansible
+  playbooks:
+    create: ../default/create.yml
+    destroy: ../default/destroy.yml
+  config_options:
+    defaults:
+      remote_tmp: /tmp/.ansible
+  env:
+    ANSIBLE_ROLES_PATH: ../../roles/
+verifier:
+  name: ansible
+scenario:
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - cleanup
+    - destroy
