@@ -119,7 +119,8 @@ hashistack_base_nomad_server_configuration:
   data_dir: "{{ nomad_data_dir }}/server"
   encrypt: "{{ _credentials.nomad.gossip_encryption_key }}"
 
-hashistack_default_nomad_server_configuration: "{{ hashistack_base_nomad_server_configuration | combine(hashistack_base_nomad_server_join_configuration) }}"
+hashistack_default_nomad_server_configuration: >-
+  {{ hashistack_base_nomad_server_configuration | combine(hashistack_base_nomad_server_join_configuration) }}
 nomad_server_configuration: >-
   {{
     hashistack_default_nomad_server_configuration |
@@ -143,7 +144,8 @@ hashistack_base_nomad_client_configuration:
       omit
     }}
 
-hashistack_default_nomad_client_configuration: "{{ hashistack_base_nomad_client_configuration | combine(hashistack_base_nomad_server_join_configuration) }}"
+hashistack_default_nomad_client_configuration: >-
+  {{ hashistack_base_nomad_client_configuration | combine(hashistack_base_nomad_server_join_configuration) }}
 nomad_client_configuration: >-
   {{
     hashistack_default_nomad_client_configuration |
@@ -280,7 +282,8 @@ nomad_telemetry_configuration: >-
 ######################
 
 hashistack_default_nomad_enable_consul_integration: "{{ enable_consul | bool }}"
-nomad_enable_consul_integration: "{{ hashistack_nomad_enable_consul_integration | default(hashistack_default_nomad_enable_consul_integration) }}"
+nomad_enable_consul_integration: >-
+  {{ hashistack_nomad_enable_consul_integration | default(hashistack_default_nomad_enable_consul_integration) }}
 
 hashistack_default_nomad_consul_integration_configuration:
   address: >-
@@ -362,7 +365,8 @@ nomad_consul_integration_client_policy: |
 ############################
 
 hashistack_default_nomad_enable_vault_integration: false
-nomad_enable_vault_integration: "{{ hashistack_nomad_enable_vault_integration | default(hashistack_default_nomad_enable_vault_integration) }}"
+nomad_enable_vault_integration: >-
+  {{ hashistack_nomad_enable_vault_integration | default(hashistack_default_nomad_enable_vault_integration) }}
 
 hashistack_default_nomad_vault_integration_configuration:
   enabled: "{{ nomad_enable_vault_integration | bool }}"

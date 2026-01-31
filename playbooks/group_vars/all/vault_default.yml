@@ -111,7 +111,8 @@ hashistack_default_vault_tls_listener_configuration:
       tls_cert_file: "{{ vault_certs_dir }}/fullchain.crt"
       tls_key_file: "{{ vault_certs_dir }}/cert.key"
       tls_disable_client_certs: true
-vault_tls_listener_configuration: "{{ hashistack_vault_tls_listener_configuration | default(hashistack_default_vault_tls_listener_configuration) }}"
+vault_tls_listener_configuration: >-
+  {{ hashistack_vault_tls_listener_configuration | default(hashistack_default_vault_tls_listener_configuration) }}
 
 vault_certificates_extra_files_dir: >-
   {{ (
@@ -129,7 +130,8 @@ vault_extra_listener_configuration: []
 ########################
 
 hashistack_default_vault_enable_service_registration: "{{ enable_consul | bool }}"
-vault_enable_service_registration: "{{ hashistack_vault_enable_service_registration | default(hashistack_default_vault_enable_service_registration) }}"
+vault_enable_service_registration: >-
+  {{ hashistack_vault_enable_service_registration | default(hashistack_default_vault_enable_service_registration) }}
 
 hashistack_default_vault_service_registration_configuration:
   consul:
@@ -137,7 +139,8 @@ hashistack_default_vault_service_registration_configuration:
       127.0.0.1:{{ hostvars[groups['consul_servers'][0]].consul_api_port[hostvars[groups['consul_servers'][0]].consul_api_scheme] }}
     scheme: "{{ hostvars[groups['consul_servers'][0]].consul_api_scheme }}"
     token: "{{ _credentials.consul.tokens.vault.secret_id }}"
-vault_service_registration_configuration: "{{ hashistack_vault_service_registration_configuration | default(hashistack_default_vault_service_registration_configuration) }}"
+vault_service_registration_configuration: >-
+  {{ hashistack_vault_service_registration_configuration | default(hashistack_default_vault_service_registration_configuration) }}
 
 vault_service_registration_policy: |
   service "vault" {

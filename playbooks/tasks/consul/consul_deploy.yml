@@ -1,7 +1,7 @@
 ---
-- name: "Consul"
+- name: "consul | consul_deploy | Main"
   block:
-    - name: "Deploy Consul Control Plane"
+    - name: "consul | consul_deploy | Deploy Consul Control Plane"
       ansible.builtin.import_tasks:
         file: consul_control_plane.yml
       when:
@@ -9,7 +9,7 @@
       tags:
         - consul_servers
 
-    - name: "Deploy Consul Agents"
+    - name: "consul | consul_deploy | Deploy Consul Agents"
       ansible.builtin.import_tasks:
         file: consul_agents.yml
       when:

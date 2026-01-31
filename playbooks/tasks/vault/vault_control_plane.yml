@@ -1,17 +1,18 @@
 ---
-- name: "Vault control plane"
+- name: "vault | vault_control_plane | Main"
   block:
-    - name: "Vault | Create consul token for service registration"
+    - name: "vault | vault_control_plane | Create consul token for service registration"
       when:
         - vault_init_server
         - enable_consul | bool
         - vault_enable_service_registration
       vars:
         _consul_vault_sr_host: "{{ hostvars[groups['consul_servers'][0]].api_interface_address }}"
-        _consul_vault_sr_port: "{{ hostvars[groups['consul_servers'][0]].consul_api_port[hostvars[groups['consul_servers'][0]].consul_api_scheme] }}"
+        _consul_vault_sr_port: >-
+          {{ hostvars[groups['consul_servers'][0]].consul_api_port[hostvars[groups['consul_servers'][0]].consul_api_scheme] }}
         _consul_vault_sr_scheme: "{{ hostvars[groups['consul_servers'][0]].consul_api_scheme }}"
       block:
-        - name: "Vault | Create consul vault policy"
+        - name: "vault | vault_control_plane | Create consul vault policy"
           community.general.consul_policy:
             token: "{{ _credentials.consul.root_token.secret_id }}"
             host: "{{ _consul_vault_sr_host }}"
@@ -23,7 +24,7 @@
             rules: "{{ vault_service_registration_policy }}"
           register: _consul_vault_policy
 
-        - name: "Vault | Create consul vault token" # noqa: no-handler
+        - name: "vault | vault_control_plane | Create consul vault token" # noqa: no-handler
           community.general.consul_token:
             token: "{{ _credentials.consul.root_token.secret_id }}"
             host: "{{ _consul_vault_sr_host }}"
@@ -37,12 +38,12 @@
             state: present
           when: _consul_vault_policy.changed
 
-    - name: "Vault | Stat vault secret file"
+    - name: "vault | vault_control_plane | Stat vault secret file"
       ansible.builtin.stat:
         path: "{{ hashistack_sub_configuration_directories.secrets }}/vault.yml"
       register: _vault_needs_early_unseal
 
-    - name: "Include ednz_cloud.hashistack.vault"
+    - name: "vault | vault_control_plane | Include ednz_cloud.hashistack.vault"
       ansible.builtin.include_role:
         name: ednz_cloud.hashistack.vault
       vars:
@@ -51,7 +52,7 @@
         vault_unseal_tls_verify: false
         vault_unseal_keys: "{{ _credentials.vault['keys'] | default([]) }}"
 
-    - name: "Vault | Initialize vault cluster" # noqa: run-once[task]
+    - name: "vault | vault_control_plane | Initialize vault cluster" # noqa: run-once[task]
       ednz_cloud.hashistack.vault_init:
         api_url: "{{ vault_configuration['api_addr'] }}"
         tls_verify: false
@@ -63,7 +64,7 @@
       until: not _vault_init_secret.failed
       when: vault_init_server
 
-    - name: "Vault | Write vault configuration to file" # noqa: run-once[task] no-handler
+    - name: "vault | vault_control_plane | Write vault configuration to file" # noqa: run-once[task] no-handler
       ansible.builtin.copy:
         content: "{{ _vault_init_secret.state | to_nice_yaml(indent=2) }}"
         dest: "{{ hashistack_sub_configuration_directories.secrets }}/vault.yml"
@@ -75,13 +76,13 @@
         - _vault_init_secret.changed
       delegate_to: localhost
 
-    - name: "Load vault cluster variables necessary for unseal operation"
+    - name: "vault | vault_control_plane | Load vault cluster variables necessary for unseal operation"
       ansible.builtin.import_role:
         name: ednz_cloud.hashistack.hashistack
       vars:
         hashistack_only_load_credentials: true
 
-    - name: "Vault | Unseal the bootstrap node" # noqa: run-once[task] no-handler
+    - name: "vault | vault_control_plane | Unseal the bootstrap node" # noqa: run-once[task] no-handler
       ednz_cloud.hashistack.vault_unseal:
         api_url: "{{ vault_configuration['api_addr'] }}"
         tls_verify: false
@@ -91,7 +92,7 @@
         - _vault_init_secret.changed
       register: _vault_unseal_secret
 
-    - name: "Vault | Unseal all vault nodes"
+    - name: "vault | vault_control_plane | Unseal all vault nodes"
       ednz_cloud.hashistack.vault_unseal:
         api_url: "{{ vault_configuration['api_addr'] }}"
         tls_verify: false

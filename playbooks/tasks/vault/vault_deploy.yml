@@ -1,7 +1,7 @@
 ---
-- name: "Vault"
+- name: "vault | vault_deploy | Main"
   block:
-    - name: "Deploy Vault Control Plane"
+    - name: "vault | vault_deploy | Deploy Vault Control Plane"
       ansible.builtin.import_tasks:
         file: vault_control_plane.yml
       when:

@@ -65,7 +65,12 @@ hashistack_ca_intermediate_name_constraints_permitted:
   - IP:172.16.0.0/16
   - IP:10.0.0.0/8
   - IP:127.0.0.0/8
-hashistack_ca_intermediate_name_constraints_critical: "{{ (hashistack_ca_intermediate_name_constraints_permitted is defined and hashistack_ca_intermediate_name_constraints_permitted | length > 0) }}"
+hashistack_ca_intermediate_name_constraints_critical: >-
+  {{
+    (hashistack_ca_intermediate_name_constraints_permitted is defined
+    and hashistack_ca_intermediate_name_constraints_permitted |
+    length > 0)
+  }}
 
 #####################
 # Leaf certificates #
@@ -78,11 +83,11 @@ hashistack_ca_leaf_renew_threshold: 30d
 # Consul Leaf Certificates #
 ############################
 hashistack_ca_consul_org_name: "{{ hashistack_ca_root_org_name }}"
-hashistack_ca_consul_common_name: "{{ inventory_hostname|ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain) }}"
+hashistack_ca_consul_common_name: "{{ inventory_hostname | ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain) }}"
 hashistack_ca_consul_csr_sans: >
   {{
     [
-      "DNS:" + (inventory_hostname|ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain)),
+      "DNS:" + (inventory_hostname | ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain)),
       "DNS:consul.service.consul",
       "DNS:localhost",
       "IP:" + api_interface_address,
@@ -95,7 +100,7 @@ hashistack_ca_consul_csr_sans: >
 # Nomad Leaf Certificates #
 ###########################
 hashistack_ca_nomad_org_name: "{{ hashistack_ca_root_org_name }}"
-hashistack_ca_nomad_common_name: "{{ inventory_hostname|ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain) }}"
+hashistack_ca_nomad_common_name: "{{ inventory_hostname | ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain) }}"
 hashistack_ca_nomad_csr_sans: >
   {{
     [
@@ -113,7 +118,7 @@ hashistack_ca_nomad_csr_sans: >
 # Vault Leaf Certificates #
 ###########################
 hashistack_ca_vault_org_name: "{{ hashistack_ca_root_org_name }}"
-hashistack_ca_vault_common_name: "{{ inventory_hostname|ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain) }}"
+hashistack_ca_vault_common_name: "{{ inventory_hostname | ednz_cloud.hashistack.ensure_domain(hashistack_ca_domain) }}"
 hashistack_ca_vault_csr_sans: >
   {{
     [

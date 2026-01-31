@@ -1,16 +1,16 @@
 ---
-- name: "Nomad clients"
+- name: "nomad | nomad_clients | Main"
   block:
-    - name: "Nomad | Install docker driver"
+    - name: "nomad | nomad_clients | Install docker driver"
       ansible.builtin.include_role:
         name: ednz_cloud.utils.install_docker
       when: nomad_driver_enable_docker
 
-    - name: "Include ednz_cloud.hashistack.cni"
+    - name: "nomad | nomad_clients | Include ednz_cloud.hashistack.cni"
       ansible.builtin.include_role:
         name: ednz_cloud.hashistack.cni
 
-    - name: "Nomad | Deploy Clients"
+    - name: "nomad | nomad_clients | Deploy Clients"
       ansible.builtin.include_role:
         name: ednz_cloud.hashistack.nomad
       when: not nomad_enable_server

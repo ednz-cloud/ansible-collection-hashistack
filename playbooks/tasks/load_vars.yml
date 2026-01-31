@@ -1,58 +1,53 @@
 ---
 # hashistack variable injection playbook
-- name: "Load global variables"
+- name: "load_vars | Load global variables"
   ansible.builtin.import_tasks:
     file: misc/load_global_vars.yml
 
-- name: "Load credentials variables"
+- name: "load_vars | Load credentials variables"
   ansible.builtin.import_tasks:
     file: misc/load_credentials_vars.yml
 
-- name: "Load group specific variables"
+- name: "load_vars | Load group specific variables"
   ansible.builtin.import_tasks:
     file: misc/load_group_vars.yml
 
-- name: "Load host specific variables"
+- name: "load_vars | Load host specific variables"
   ansible.builtin.import_tasks:
     file: misc/load_host_vars.yml
 
-- name: "Ensure remote directories exists"
+- name: "load_vars | Ensure remote directories exists"
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   loop:
     - "{{ hashistack_remote_config_dir }}"
     - "{{ hashistack_remote_data_dir }}"
 
-- name: "Load custom CA certificates"
+- name: "load_vars | Load custom CA certificates"
   ansible.builtin.import_tasks:
     file: misc/load_ca_certificates.yml
 
-- name: "Merge consul configurations"
+- name: "load_vars | Merge consul configurations"
   ansible.builtin.import_tasks:
     file: "consul/consul_vars.yml"
   when:
     - enable_consul | bool
     - "('consul_servers' in group_names) or ('consul_agents' in group_names)"
 
-- name: "Merge vault configurations"
+- name: "load_vars | Merge vault configurations"
   ansible.builtin.import_tasks:
     file: "vault/vault_vars.yml"
   when:
     - enable_vault | bool
     - "'vault_servers' in group_names"
 
-- name: "Merge nomad configurations"
+- name: "load_vars | Merge nomad configurations"
   ansible.builtin.import_tasks:
     file: "nomad/nomad_vars.yml"
   when:
     - enable_nomad | bool
     - "('nomad_servers' in group_names) or ('nomad_clients' in group_names)"
-# - name: "Print all config"
-#   ansible.builtin.debug:
-#     msg: "{{ hostvars[inventory_hostname] }}"
-#
-# - fail:

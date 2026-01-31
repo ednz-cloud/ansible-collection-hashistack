@@ -7,7 +7,7 @@ hashistack_default_consul_config_dir: "{{ hashistack_remote_config_dir }}/consul
 consul_config_dir: "{{ hashistack_consul_config_dir | default(hashistack_default_consul_config_dir) }}"
 
 hashistack_default_consul_data_dir: "/opt/consul"
-consul_data_dir: "{{ hashistack_consul_data_dir | default(hashistack_default_consul_data_dir)}}"
+consul_data_dir: "{{ hashistack_consul_data_dir | default(hashistack_default_consul_data_dir) }}"
 
 hashistack_default_consul_certs_dir: "{{ consul_config_dir }}/tls"
 consul_certs_dir: "{{ hashistack_consul_certs_dir | default(hashistack_default_consul_certs_dir) }}"
@@ -219,13 +219,16 @@ consul_certificates_extra_files_dir: >-
 ###########################
 
 hashistack_default_consul_enable_prometheus_metrics: false
-consul_enable_prometheus_metrics: "{{ hashistack_consul_enable_prometheus_metrics | default(hashistack_default_consul_enable_prometheus_metrics) }}"
+consul_enable_prometheus_metrics: >-
+  {{ hashistack_consul_enable_prometheus_metrics | default(hashistack_default_consul_enable_prometheus_metrics) }}
 
 hashistack_default_consul_prometheus_retention_time: 60s
-consul_prometheus_retention_time: "{{ hashistack_consul_prometheus_retention_time | default(hashistack_default_consul_prometheus_retention_time) }}"
+consul_prometheus_retention_time: >-
+  {{ hashistack_consul_prometheus_retention_time | default(hashistack_default_consul_prometheus_retention_time) }}
 
 hashistack_default_consul_telemetry_configuration: {}
-consul_telemetry_configuration: "{{ hashistack_consul_telemetry_configuration | default(hashistack_default_consul_telemetry_configuration) }}"
+consul_telemetry_configuration: >-
+  {{ hashistack_consul_telemetry_configuration | default(hashistack_default_consul_telemetry_configuration) }}
 
 ###########
 # logging #

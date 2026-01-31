@@ -1,7 +1,7 @@
 ---
-- name: "Nomad"
+- name: "nomad | nomad_deploy | Main"
   block:
-    - name: "Deploy Nomad Control Plane"
+    - name: "nomad | nomad_deploy | Deploy Nomad Control Plane"
       ansible.builtin.import_tasks:
         file: nomad_control_plane.yml
       when:
@@ -9,7 +9,7 @@
       tags:
         - nomad_servers
 
-    - name: "Deploy Nomad Clients"
+    - name: "nomad | nomad_deploy | Deploy Nomad Clients"
       ansible.builtin.import_tasks:
         file: nomad_clients.yml
       when:

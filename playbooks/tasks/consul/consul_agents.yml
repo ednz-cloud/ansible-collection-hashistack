@@ -1,6 +1,6 @@
 ---
-- name: "Consul agents"
+- name: "consul | consul_agents | Main"
   block:
-    - name: "Deploy Consul Agents"
+    - name: "consul | consul_agents | Deploy"
       ansible.builtin.include_role:
         name: ednz_cloud.hashistack.consul

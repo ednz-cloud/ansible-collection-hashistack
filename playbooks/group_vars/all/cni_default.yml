@@ -10,7 +10,8 @@ hashistack_default_cni_plugins_install_path: /opt/cni/bin
 cni_plugins_install_path: "{{ hashistack_cni_plugins_install_path | default(hashistack_default_cni_plugins_install_path) }}"
 
 hashistack_default_cni_plugins_install_consul_cni: true
-cni_plugins_install_consul_cni: "{{ hashistack_cni_plugins_install_consul_cni | default(hashistack_default_cni_plugins_install_consul_cni) }}"
+cni_plugins_install_consul_cni: >-
+  {{ hashistack_cni_plugins_install_consul_cni | default(hashistack_default_cni_plugins_install_consul_cni) }}
 
 hashistack_default_cni_user: nomad
 cni_user: "{{ hashistack_cni_user | default(hashistack_default_cni_user) }}"
