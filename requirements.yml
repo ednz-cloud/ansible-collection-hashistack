@@ -3,7 +3,7 @@ roles: []
 collections:
   - name: https://github.com/ednz-cloud/ansible-collection-utils.git
     type: git
-    version: v0.11.0
+    version: v0.11.1
   - name: community.crypto
     version: 3.0.4
   - name: openstack.cloud
