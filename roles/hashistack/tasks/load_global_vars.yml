@@ -2,13 +2,13 @@
 - name: "load_global_vars | Stat global configuration file"
   ansible.builtin.stat:
     path: "{{ hashistack_configuration_directory }}/{{ hashistack_configuration_global_vars_file }}"
-  register: _global_config_file
+  register: _hashistack_global_config_file
   delegate_to: localhost
 
 - name: "load_global_vars | Make sure global configuration file exists"
   ansible.builtin.assert:
     that:
-      - _global_config_file.stat.exists
+      - _hashistack_global_config_file.stat.exists
   delegate_to: localhost
 
 - name: "load_global_vars | Load global variables"

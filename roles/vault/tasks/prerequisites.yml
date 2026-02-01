@@ -19,7 +19,7 @@
     group: "{{ vault_group }}"
     mode: "0755"
 
-- name: "prerequisites | Create directory {{ vault_data_dir}}"
+- name: "prerequisites | Create directory {{ vault_data_dir }}"
   ansible.builtin.file:
     path: "{{ vault_data_dir }}"
     state: directory

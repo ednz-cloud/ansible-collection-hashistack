@@ -6,7 +6,7 @@
   ansible.builtin.set_fact:
     nomad_configuration: "{{
       nomad_configuration |
-      combine(_config_to_merge|from_yaml, recursive=true)
+      combine(_config_to_merge | from_yaml, recursive=true)
       }}"
 
 - name: "merge_variables | Merge addresses configuration"

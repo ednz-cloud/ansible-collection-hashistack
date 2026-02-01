@@ -1,5 +1,4 @@
 ---
-# hashistack variable injection playbook
 - name: "load_vars | Load global variables"
   ansible.builtin.import_tasks:
     file: misc/load_global_vars.yml

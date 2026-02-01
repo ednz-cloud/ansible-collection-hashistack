@@ -11,11 +11,11 @@
 
     - name: "install | Set wanted nomad version to latest tag"
       ansible.builtin.set_fact:
-        _nomad_wanted_version: "{{ _nomad_latest_release.json['tag_name']|regex_replace('v', '') }}"
+        _nomad_wanted_version: "{{ _nomad_latest_release.json['tag_name'] | regex_replace('v', '') }}"
 
 - name: "install | Set wanted nomad version to {{ nomad_version }}"
   ansible.builtin.set_fact:
-    _nomad_wanted_version: "{{ nomad_version|regex_replace('v', '') }}"
+    _nomad_wanted_version: "{{ nomad_version | regex_replace('v', '') }}"
   when: nomad_version != 'latest'
 
 - name: "install | Get current nomad version"
@@ -37,7 +37,7 @@
 
 - name: "install | Download and install nomad binary"
   when: _nomad_current_version is not defined
-    or _nomad_wanted_version != (_nomad_current_version.content|default('')|b64decode)
+    or _nomad_wanted_version != (_nomad_current_version.content | default('') | b64decode)
   block:
     - name: "install | Set nomad package name to download"
       ansible.builtin.set_fact:

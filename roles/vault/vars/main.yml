@@ -30,8 +30,8 @@ vault_certificates_reload_watchlist: >-
 
 vault_configuration:
   cluster_name: "{{ vault_cluster_name }}"
-  cluster_addr: "{{ 'https' if vault_enable_tls else 'http'}}://{{ vault_cluster_addr }}:8201"
-  api_addr: "{{ 'https' if vault_enable_tls else 'http'}}://{{ vault_cluster_addr }}:8200"
+  cluster_addr: "{{ 'https' if vault_enable_tls else 'http' }}://{{ vault_cluster_addr }}:8201"
+  api_addr: "{{ 'https' if vault_enable_tls else 'http' }}://{{ vault_cluster_addr }}:8200"
   ui: "{{ vault_enable_ui }}"
   disable_mlock: "{{ vault_disable_mlock }}"
   disable_cache: "{{ vault_disable_cache }}"

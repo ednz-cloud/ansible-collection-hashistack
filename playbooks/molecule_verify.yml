@@ -25,7 +25,7 @@
 
         hashistack_tests_consul_api_addr: "{{ hostvars[groups['consul_servers'][0]]['consul_api_addr'] }}"
         # can be set to empty string if not using ACLs
-        hashistack_tests_consul_token: "{{ _credentials.consul.root_token.secret_id }}"
+        hashistack_tests_consul_token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
         # can be set to localhost if api is reachable,
         # or to the address of a consul server if api is not reachable from localhost
         hashistack_tests_consul_api_calls_delegation: "{{ groups['consul_servers'][0] }}"
@@ -52,7 +52,7 @@
 
         hashistack_tests_nomad_api_addr: "{{ hostvars[groups['nomad_servers'][0]]['nomad_api_addr'] }}"
         # can be set to empty string if not using ACLs
-        hashistack_tests_nomad_token: "{{ _credentials.nomad.root_token.secret_id }}"
+        hashistack_tests_nomad_token: "{{ _hashistack_credentials.nomad.root_token.secret_id }}"
         # can be set to localhost if api is reachable,
         # or to the address of a nomad server if api is not reachable from localhost
         hashistack_tests_nomad_api_calls_delegation: "{{ groups['nomad_servers'][0] }}"

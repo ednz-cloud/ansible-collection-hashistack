@@ -27,7 +27,7 @@
 
     - name: "consul | consul_control_plane | Initialize consul cluster" # noqa: run-once[task]
       community.general.consul_acl_bootstrap:
-        bootstrap_secret: "{{ _credentials.consul.root_token.secret_id }}"
+        bootstrap_secret: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
         host: "{{ api_interface_address }}"
         port: "{{ consul_api_port[consul_api_scheme] }}"
         scheme: "{{ consul_api_scheme }}"
@@ -46,7 +46,7 @@
           block:
             - name: "consul | consul_control_plane | Create consul agent policy"
               community.general.consul_policy:
-                token: "{{ _credentials.consul.root_token.secret_id }}"
+                token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
                 host: "{{ api_interface_address }}"
                 port: "{{ consul_api_port[consul_api_scheme] }}"
                 scheme: "{{ consul_api_scheme }}"
@@ -58,13 +58,13 @@
 
             - name: "consul | consul_control_plane | Create consul agents token"
               community.general.consul_token:
-                token: "{{ _credentials.consul.root_token.secret_id }}"
+                token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
                 host: "{{ api_interface_address }}"
                 port: "{{ consul_api_port[consul_api_scheme] }}"
                 scheme: "{{ consul_api_scheme }}"
                 validate_certs: false
-                accessor_id: "{{ _credentials.consul.tokens.agent.accessor_id }}"
-                secret_id: "{{ _credentials.consul.tokens.agent.secret_id }}"
+                accessor_id: "{{ _hashistack_credentials.consul.tokens.agent.accessor_id }}"
+                secret_id: "{{ _hashistack_credentials.consul.tokens.agent.secret_id }}"
                 policies:
                   - id: "{{ _consul_agent_policy.policy.ID }}"
                 state: present

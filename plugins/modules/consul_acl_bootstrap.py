@@ -40,10 +40,10 @@ author:
 EXAMPLES = r"""
 # Example: Bootstrap ACL for a Consul cluster
 - name: Bootstrap ACL for Consul cluster
-    ednz_cloud.hashistack.consul_acl_bootstrap:
-        api_addr: 127.0.0.1
-        scheme: http
-        port: 8500
+  ednz_cloud.hashistack.consul_acl_bootstrap:
+    api_addr: 127.0.0.1
+    scheme: http
+    port: 8500
 """
 
 RETURN = r"""
@@ -72,10 +72,8 @@ else:
 def bootstrap_acl(scheme: str, api_addr: str, port: int) -> Tuple[bool, dict]:
     url = f"{scheme}://" + f"{api_addr}:{port}" + "/v1/acl/bootstrap"
 
-    # Make a PUT request to bootstrap the cluster
     response = requests.put(url)
 
-    # Check the HTTP status code and handle the response
     if response.status_code == 200:
         return True, {
             "accessor_id": response.json()["AccessorID"],
@@ -84,7 +82,7 @@ def bootstrap_acl(scheme: str, api_addr: str, port: int) -> Tuple[bool, dict]:
     elif response.status_code == 403:
         return False, {"message": "Cluster has already been bootstrapped"}
     else:
-        response.raise_for_status()  # Raise an exception for other status codes
+        response.raise_for_status()
 
 
 def run_module():

@@ -24,7 +24,7 @@
 
 - name: "cni_install | Set facts for wanted cni plugins release"
   ansible.builtin.set_fact:
-    cni_plugins_wanted_version: "{{ _cni_plugins_latest_release.json['tag_name'] | jregex_replace('v', '') }}"
+    cni_plugins_wanted_version: "{{ _cni_plugins_latest_release.json['tag_name'] | regex_replace('v', '') }}"
   when: _cni_plugins_latest_release.json is defined
     and (_cni_plugins_latest_release.json | length > 0)
 

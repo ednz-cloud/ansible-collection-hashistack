@@ -138,7 +138,7 @@ hashistack_default_vault_service_registration_configuration:
     address: >-
       127.0.0.1:{{ hostvars[groups['consul_servers'][0]].consul_api_port[hostvars[groups['consul_servers'][0]].consul_api_scheme] }}
     scheme: "{{ hostvars[groups['consul_servers'][0]].consul_api_scheme }}"
-    token: "{{ _credentials.consul.tokens.vault.secret_id }}"
+    token: "{{ _hashistack_credentials.consul.tokens.vault.secret_id }}"
 vault_service_registration_configuration: >-
   {{ hashistack_vault_service_registration_configuration | default(hashistack_default_vault_service_registration_configuration) }}
 

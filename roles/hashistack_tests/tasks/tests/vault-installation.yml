@@ -1,9 +1,6 @@
 ---
-# task/test/nomad-installation file for hashistack_tests
-
-# Verifying required variables
-- name: "Test | Define required variables for this test"
-  set_fact:
+- name: "tests | vault-installation | Define required variables for this test"
+  ansible.builtin.set_fact:
     _hashistack_tests_required_variables:
       - hashistack_tests_vault_config_directory
       - hashistack_tests_vault_data_directory
@@ -12,135 +9,134 @@
       - hashistack_tests_vault_bin_path
       - hashistack_tests_vault_service_name
 
-- name: "Test | Assert required variables are set"
-  assert:
+- name: "tests | vault-installation | Assert required variables are set"
+  ansible.builtin.assert:
     that:
       - item is defined
     fail_msg: "Required variable '{{ item }}' is not defined."
   loop: "{{ _hashistack_tests_required_variables }}"
 
-# Start of tests
-- name: "Test | vault user and group"
+- name: "tests | vault-installation | Vault user and group"
   block:
-    - name: "Getent user vault"
+    - name: "tests | vault-installation | Getent user vault"
       ansible.builtin.getent:
         database: passwd
         key: "{{ hashistack_tests_vault_user }}"
-      register: vault_user
+      register: _hashistack_tests_vault_user
 
-    - name: "Getent group vault"
+    - name: "tests | vault-installation | Getent group vault"
       ansible.builtin.getent:
         database: group
         key: "{{ hashistack_tests_vault_group }}"
-      register: vault_group
+      register: _hashistack_tests_vault_group
 
-    - name: "Verify vault user and group"
+    - name: "tests | vault-installation | Verify vault user and group"
       ansible.builtin.assert:
         that:
-          - not vault_user.failed
-          - not vault_group.failed
-          - "hashistack_tests_vault_user in vault_user.ansible_facts.getent_passwd.keys()"
-          - "'/bin/false' in vault_user.ansible_facts.getent_passwd[hashistack_tests_vault_user]"
-          - "hashistack_tests_vault_group in vault_group.ansible_facts.getent_group.keys()"
+          - not _hashistack_tests_vault_user.failed
+          - not _hashistack_tests_vault_group.failed
+          - "hashistack_tests_vault_user in _hashistack_tests_vault_user.ansible_facts.getent_passwd.keys()"
+          - "'/bin/false' in _hashistack_tests_vault_user.ansible_facts.getent_passwd[hashistack_tests_vault_user]"
+          - "hashistack_tests_vault_group in _hashistack_tests_vault_group.ansible_facts.getent_group.keys()"
 
-- name: "Test | binary {{ hashistack_tests_vault_bin_path }}"
+- name: "tests | vault-installation | Binary {{ hashistack_tests_vault_bin_path }}"
   block:
-    - name: "Stat binary {{ hashistack_tests_vault_bin_path }}"
+    - name: "tests | vault-installation | Stat binary {{ hashistack_tests_vault_bin_path }}"
       ansible.builtin.stat:
         path: "{{ hashistack_tests_vault_bin_path }}"
-      register: stat_usr_local_bin_vault
+      register: _hashistack_tests_stat_usr_local_bin_vault
 
-    - name: "Verify binary {{ hashistack_tests_vault_bin_path }}"
+    - name: "tests | vault-installation | Verify binary {{ hashistack_tests_vault_bin_path }}"
       ansible.builtin.assert:
         that:
-          - stat_usr_local_bin_vault.stat.exists
-          - stat_usr_local_bin_vault.stat.isreg
-          - stat_usr_local_bin_vault.stat.pw_name == 'root'
-          - stat_usr_local_bin_vault.stat.gr_name == 'root'
-          - stat_usr_local_bin_vault.stat.mode == '0755'
+          - _hashistack_tests_stat_usr_local_bin_vault.stat.exists
+          - _hashistack_tests_stat_usr_local_bin_vault.stat.isreg
+          - _hashistack_tests_stat_usr_local_bin_vault.stat.pw_name == 'root'
+          - _hashistack_tests_stat_usr_local_bin_vault.stat.gr_name == 'root'
+          - _hashistack_tests_stat_usr_local_bin_vault.stat.mode == '0755'
 
-- name: "Test | directory {{ hashistack_tests_vault_config_directory }}"
+- name: "tests | vault-installation | Directory {{ hashistack_tests_vault_config_directory }}"
   block:
-    - name: "Stat directory {{ hashistack_tests_vault_config_directory }}"
+    - name: "tests | vault-installation | Stat directory {{ hashistack_tests_vault_config_directory }}"
       ansible.builtin.stat:
         path: "{{ hashistack_tests_vault_config_directory }}"
-      register: stat_etc_vault_d
+      register: _hashistack_tests_stat_etc_vault_d
 
-    - name: "Stat file {{ hashistack_tests_vault_config_directory }}/vault.env"
+    - name: "tests | vault-installation | Stat file vault.env"
       ansible.builtin.stat:
         path: "{{ hashistack_tests_vault_config_directory }}/vault.env"
-      register: stat_etc_vault_d_vault_env
+      register: _hashistack_tests_stat_etc_vault_d_vault_env
 
-    - name: "Stat file {{ hashistack_tests_vault_config_directory }}/vault.json"
+    - name: "tests | vault-installation | Stat file vault.json"
       ansible.builtin.stat:
         path: "{{ hashistack_tests_vault_config_directory }}/vault.json"
-      register: stat_etc_vault_d_vault_json
+      register: _hashistack_tests_stat_etc_vault_d_vault_json
 
-    - name: "Slurp file {{ hashistack_tests_vault_config_directory }}/vault.json"
+    - name: "tests | vault-installation | Slurp file vault.json"
       ansible.builtin.slurp:
         src: "{{ hashistack_tests_vault_config_directory }}/vault.json"
-      register: slurp_etc_vault_d_vault_json
+      register: _hashistack_tests_slurp_etc_vault_d_vault_json
 
-    - name: "Verify directory {{ hashistack_tests_vault_config_directory }}"
+    - name: "tests | vault-installation | Verify directory {{ hashistack_tests_vault_config_directory }}"
       ansible.builtin.assert:
         that:
-          - stat_etc_vault_d.stat.exists
-          - stat_etc_vault_d.stat.isdir
-          - stat_etc_vault_d.stat.pw_name == 'vault'
-          - stat_etc_vault_d.stat.gr_name == 'vault'
-          - stat_etc_vault_d.stat.mode == '0755'
-          - stat_etc_vault_d_vault_env.stat.exists
-          - stat_etc_vault_d_vault_env.stat.isreg
-          - stat_etc_vault_d_vault_env.stat.pw_name == 'vault'
-          - stat_etc_vault_d_vault_env.stat.gr_name == 'vault'
-          - stat_etc_vault_d_vault_env.stat.mode == '0600'
-          - stat_etc_vault_d_vault_json.stat.exists
-          - stat_etc_vault_d_vault_json.stat.isreg
-          - stat_etc_vault_d_vault_json.stat.pw_name == 'vault'
-          - stat_etc_vault_d_vault_json.stat.gr_name == 'vault'
-          - stat_etc_vault_d_vault_json.stat.mode == '0600'
-          - slurp_etc_vault_d_vault_json.content != ''
+          - _hashistack_tests_stat_etc_vault_d.stat.exists
+          - _hashistack_tests_stat_etc_vault_d.stat.isdir
+          - _hashistack_tests_stat_etc_vault_d.stat.pw_name == 'vault'
+          - _hashistack_tests_stat_etc_vault_d.stat.gr_name == 'vault'
+          - _hashistack_tests_stat_etc_vault_d.stat.mode == '0755'
+          - _hashistack_tests_stat_etc_vault_d_vault_env.stat.exists
+          - _hashistack_tests_stat_etc_vault_d_vault_env.stat.isreg
+          - _hashistack_tests_stat_etc_vault_d_vault_env.stat.pw_name == 'vault'
+          - _hashistack_tests_stat_etc_vault_d_vault_env.stat.gr_name == 'vault'
+          - _hashistack_tests_stat_etc_vault_d_vault_env.stat.mode == '0600'
+          - _hashistack_tests_stat_etc_vault_d_vault_json.stat.exists
+          - _hashistack_tests_stat_etc_vault_d_vault_json.stat.isreg
+          - _hashistack_tests_stat_etc_vault_d_vault_json.stat.pw_name == 'vault'
+          - _hashistack_tests_stat_etc_vault_d_vault_json.stat.gr_name == 'vault'
+          - _hashistack_tests_stat_etc_vault_d_vault_json.stat.mode == '0600'
+          - _hashistack_tests_slurp_etc_vault_d_vault_json.content != ''
 
-- name: "Test | directory {{ hashistack_tests_vault_data_directory }}"
+- name: "tests | vault-installation | Directory {{ hashistack_tests_vault_data_directory }}"
   block:
-    - name: "Stat directory {{ hashistack_tests_vault_data_directory }}"
+    - name: "tests | vault-installation | Stat directory {{ hashistack_tests_vault_data_directory }}"
       ansible.builtin.stat:
         path: "{{ hashistack_tests_vault_data_directory }}"
-      register: stat_opt_vault
+      register: _hashistack_tests_stat_opt_vault
 
-    - name: "Verify directory {{ hashistack_tests_vault_data_directory }}"
+    - name: "tests | vault-installation | Verify directory {{ hashistack_tests_vault_data_directory }}"
       ansible.builtin.assert:
         that:
-          - stat_opt_vault.stat.exists
-          - stat_opt_vault.stat.isdir
-          - stat_opt_vault.stat.pw_name == 'vault'
-          - stat_opt_vault.stat.gr_name == 'vault'
-          - stat_opt_vault.stat.mode == '0755'
+          - _hashistack_tests_stat_opt_vault.stat.exists
+          - _hashistack_tests_stat_opt_vault.stat.isdir
+          - _hashistack_tests_stat_opt_vault.stat.pw_name == 'vault'
+          - _hashistack_tests_stat_opt_vault.stat.gr_name == 'vault'
+          - _hashistack_tests_stat_opt_vault.stat.mode == '0755'
 
-- name: "Test | service {{ hashistack_tests_vault_service_name }}"
+- name: "tests | vault-installation | Service {{ hashistack_tests_vault_service_name }}"
   block:
-    - name: "Get service {{ hashistack_tests_vault_service_name }}"
+    - name: "tests | vault-installation | Get service {{ hashistack_tests_vault_service_name }}"
       ansible.builtin.service_facts:
 
-    - name: "Stat file /etc/systemd/system/{{ hashistack_tests_vault_service_name }}.service"
+    - name: "tests | vault-installation | Stat file systemd unit file"
       ansible.builtin.stat:
         path: "/etc/systemd/system/{{ hashistack_tests_vault_service_name }}.service"
-      register: stat_etc_systemd_system_vault_service
+      register: _hashistack_tests_stat_etc_systemd_system_vault_service
 
-    - name: "Slurp file /etc/systemd/system/{{ hashistack_tests_vault_service_name }}.service"
+    - name: "tests | vault-installation | Slurp systemd unit file"
       ansible.builtin.slurp:
         src: "/etc/systemd/system/{{ hashistack_tests_vault_service_name }}.service"
-      register: slurp_etc_systemd_system_vault_service
+      register: _hashistack_tests_slurp_etc_systemd_system_vault_service
 
-    - name: "Verify service {{ hashistack_tests_vault_service_name }}"
+    - name: "tests | vault-installation | Verify service {{ hashistack_tests_vault_service_name }}"
       ansible.builtin.assert:
         that:
-          - stat_etc_systemd_system_vault_service.stat.exists
-          - stat_etc_systemd_system_vault_service.stat.isreg
-          - stat_etc_systemd_system_vault_service.stat.pw_name == 'root'
-          - stat_etc_systemd_system_vault_service.stat.gr_name == 'root'
-          - stat_etc_systemd_system_vault_service.stat.mode == '0644'
-          - slurp_etc_systemd_system_vault_service.content != ''
+          - _hashistack_tests_stat_etc_systemd_system_vault_service.stat.exists
+          - _hashistack_tests_stat_etc_systemd_system_vault_service.stat.isreg
+          - _hashistack_tests_stat_etc_systemd_system_vault_service.stat.pw_name == 'root'
+          - _hashistack_tests_stat_etc_systemd_system_vault_service.stat.gr_name == 'root'
+          - _hashistack_tests_stat_etc_systemd_system_vault_service.stat.mode == '0644'
+          - _hashistack_tests_slurp_etc_systemd_system_vault_service.content != ''
           - ansible_facts.services[hashistack_tests_vault_service_name~'.service'] is defined
           - ansible_facts.services[hashistack_tests_vault_service_name~'.service']['source'] == 'systemd'
           - ansible_facts.services[hashistack_tests_vault_service_name~'.service']['state'] == 'running'

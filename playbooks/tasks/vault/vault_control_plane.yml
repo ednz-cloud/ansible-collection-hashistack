@@ -14,7 +14,7 @@
       block:
         - name: "vault | vault_control_plane | Create consul vault policy"
           community.general.consul_policy:
-            token: "{{ _credentials.consul.root_token.secret_id }}"
+            token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
             host: "{{ _consul_vault_sr_host }}"
             port: "{{ _consul_vault_sr_port }}"
             scheme: "{{ _consul_vault_sr_scheme }}"
@@ -26,13 +26,13 @@
 
         - name: "vault | vault_control_plane | Create consul vault token" # noqa: no-handler
           community.general.consul_token:
-            token: "{{ _credentials.consul.root_token.secret_id }}"
+            token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
             host: "{{ _consul_vault_sr_host }}"
             port: "{{ _consul_vault_sr_port }}"
             scheme: "{{ _consul_vault_sr_scheme }}"
             validate_certs: false
-            accessor_id: "{{ _credentials.consul.tokens.vault.accessor_id }}"
-            secret_id: "{{ _credentials.consul.tokens.vault.secret_id }}"
+            accessor_id: "{{ _hashistack_credentials.consul.tokens.vault.accessor_id }}"
+            secret_id: "{{ _hashistack_credentials.consul.tokens.vault.secret_id }}"
             policies:
               - id: "{{ _consul_vault_policy.policy.ID }}"
             state: present
@@ -50,7 +50,7 @@
         vault_enable_auto_unseal: true
         vault_unseal_url: "{{ vault_configuration['api_addr'] }}"
         vault_unseal_tls_verify: false
-        vault_unseal_keys: "{{ _credentials.vault['keys'] | default([]) }}"
+        vault_unseal_keys: "{{ _hashistack_credentials.vault['keys'] | default([]) }}"
 
     - name: "vault | vault_control_plane | Initialize vault cluster" # noqa: run-once[task]
       ednz_cloud.hashistack.vault_init:
@@ -86,7 +86,7 @@
       ednz_cloud.hashistack.vault_unseal:
         api_url: "{{ vault_configuration['api_addr'] }}"
         tls_verify: false
-        key_shares: "{{ _credentials.vault['keys'] }}"
+        key_shares: "{{ _hashistack_credentials.vault['keys'] }}"
       when:
         - vault_init_server
         - _vault_init_secret.changed
@@ -96,7 +96,7 @@
       ednz_cloud.hashistack.vault_unseal:
         api_url: "{{ vault_configuration['api_addr'] }}"
         tls_verify: false
-        key_shares: "{{ _credentials.vault['keys'] }}"
+        key_shares: "{{ _hashistack_credentials.vault['keys'] }}"
       retries: 5
       delay: 5
       until: _unseal_status.changed or not _unseal_status.failed

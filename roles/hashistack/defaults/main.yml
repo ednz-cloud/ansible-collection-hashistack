@@ -1,5 +1,4 @@
 ---
-# defaults file for hashistack
 hashistack_configuration_directory: "{{ lookup('env', 'PWD') }}/etc/hashistack"
 hashistack_sub_configuration_directories:
   secrets: "{{ hashistack_configuration_directory }}/secrets"

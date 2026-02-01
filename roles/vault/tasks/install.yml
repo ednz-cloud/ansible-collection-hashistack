@@ -10,11 +10,11 @@
 
     - name: "install | Set wanted vault version to latest tag"
       ansible.builtin.set_fact:
-        _vault_wanted_version: "{{ _vault_latest_release.json['tag_name']|regex_replace('v', '') }}"
+        _vault_wanted_version: "{{ _vault_latest_release.json['tag_name'] | regex_replace('v', '') }}"
 
 - name: "install | Set wanted vault version to {{ vault_version }}"
   ansible.builtin.set_fact:
-    _vault_wanted_version: "{{ vault_version|regex_replace('v', '') }}"
+    _vault_wanted_version: "{{ vault_version | regex_replace('v', '') }}"
   when: vault_version != 'latest'
 
 - name: "install | Get current vault version"
@@ -37,7 +37,7 @@
 - name: "install | Download and install vault binary"
   when:
     - _vault_current_version is not defined
-      or _vault_wanted_version != (_vault_current_version.content|default('')|b64decode)
+      or _vault_wanted_version != (_vault_current_version.content | default('') | b64decode)
     - not ansible_check_mode
   block:
     - name: "install | Set vault package name to download"

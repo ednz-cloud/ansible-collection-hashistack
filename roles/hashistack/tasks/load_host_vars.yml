@@ -3,7 +3,7 @@
   ansible.builtin.stat:
     path: "{{ hashistack_configuration_directory }}/\
       {{ group_name }}/{{ inventory_hostname }}/{{ hashistack_configuration_global_vars_file }}"
-  register: _host_config_file
+  register: _hashistack_host_config_file
   loop: "{{ group_names }}"
   loop_control:
     loop_var: group_name
@@ -13,7 +13,7 @@
   ansible.builtin.include_vars:
     dir: "{{ hashistack_configuration_directory }}/{{ item.group_name }}/{{ inventory_hostname }}"
     files_matching: "{{ hashistack_configuration_global_vars_file }}"
-  loop: "{{ _host_config_file.results }}"
+  loop: "{{ _hashistack_host_config_file.results }}"
   when: item.stat.exists
   loop_control:
     loop_var: item

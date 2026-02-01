@@ -1,6 +1,6 @@
 ---
 # task/generate_consul file for hashistack_ca
-- name: "Consul leaf certificates | Create certificate directory in for consul servers"
+- name: "generate | generate_consul | Create certificate directory in for consul servers"
   ansible.builtin.file:
     path: "{{ hashistack_ca_consul_dir }}"
     state: directory
@@ -8,15 +8,15 @@
     group: "{{ hashistack_ca_directory_owner }}"
     mode: "0755"
 
-- name: "Consul leaf certificates | Create Consul certificates"
+- name: "generate | generate_consul | Create Consul certificates"
   block:
-    - name: "Consul leaf certificates | Create Consul certificate keys"
+    - name: "generate | generate_consul | Create Consul certificate keys"
       community.crypto.openssl_privatekey:
         path: "{{ hashistack_ca_consul_key_path }}"
         owner: "{{ hashistack_ca_directory_owner }}"
         group: "{{ hashistack_ca_directory_owner }}"
 
-    - name: "Consul leaf certificates | Create CSRs for Consul servers"
+    - name: "generate | generate_consul | Create CSRs for Consul servers"
       community.crypto.openssl_csr_pipe:
         privatekey_path: "{{ hashistack_ca_consul_key_path }}"
         common_name: "{{ hashistack_ca_consul_common_name }}"
@@ -33,7 +33,7 @@
         use_common_name_for_san: false
       register: _hashistack_ca_consul_csr
 
-    - name: "Consul leaf certificates | Sign certificates with internal CA"
+    - name: "generate | generate_consul | Sign certificates with internal CA"
       community.crypto.x509_certificate:
         path: "{{ hashistack_ca_consul_cert_path }}"
         csr_content: "{{ _hashistack_ca_consul_csr.csr }}"
@@ -46,27 +46,29 @@
         group: "{{ hashistack_ca_directory_owner }}"
         mode: "0644"
 
-    - name: "Consul leaf certificates | Generate fullchain certificate"
+    - name: "generate | generate_consul | Generate fullchain certificate"
       block:
-        - name: "Consul leaf certificates | Read content of root ca certificate"
+        - name: "generate | generate_consul | Read content of root ca certificate"
           ansible.builtin.slurp:
             src: "{{ hashistack_ca_root_cert_path }}"
           register: _hashistack_ca_root_crt
 
-        - name: "Consul leaf certificates | Read content of intermediate ca certificate"
+        - name: "generate | generate_consul | Read content of intermediate ca certificate"
           ansible.builtin.slurp:
             src: "{{ hashistack_ca_intermediate_cert_path }}"
           register: _hashistack_ca_intermediate_crt
 
-        - name: "Consul leaf certificates | Read content of leaf certificate"
+        - name: "generate | generate_consul | Read content of leaf certificate"
           ansible.builtin.slurp:
             src: "{{ hashistack_ca_consul_cert_path }}"
           register: _hashistack_ca_consul_crt
 
-        - name: "Consul leaf certificates | Concatenate certificates"
+        - name: "generate | generate_consul | Concatenate certificates"
           ansible.builtin.copy:
-            content: |
-              {{ _hashistack_ca_consul_crt['content'] | b64decode }}{{ _hashistack_ca_intermediate_crt['content'] | b64decode }}{{ _hashistack_ca_root_crt['content'] | b64decode }}
+            content: "\
+              {{ _hashistack_ca_consul_crt['content'] | b64decode }}\
+              {{ _hashistack_ca_intermediate_crt['content'] | b64decode }}\
+              {{ _hashistack_ca_root_crt['content'] | b64decode }}"
             dest: "{{ hashistack_ca_consul_fullchain_path }}"
             owner: "{{ hashistack_ca_directory_owner }}"
             group: "{{ hashistack_ca_directory_owner }}"

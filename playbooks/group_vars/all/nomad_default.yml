@@ -117,7 +117,7 @@ nomad_server_bootstrap_expect: "{{ (groups['nomad_servers'] | length) }}"
 hashistack_base_nomad_server_configuration:
   enabled: "{{ nomad_enable_server }}"
   data_dir: "{{ nomad_data_dir }}/server"
-  encrypt: "{{ _credentials.nomad.gossip_encryption_key }}"
+  encrypt: "{{ _hashistack_credentials.nomad.gossip_encryption_key }}"
 
 hashistack_default_nomad_server_configuration: >-
   {{ hashistack_base_nomad_server_configuration | combine(hashistack_base_nomad_server_join_configuration) }}
@@ -292,8 +292,8 @@ hashistack_default_nomad_consul_integration_configuration:
   ssl: "{{ consul_enable_tls | bool }}"
   token: >-
     {{
-      _credentials.consul.tokens.nomad.server.secret_id if nomad_enable_server else
-      _credentials.consul.tokens.nomad.client.secret_id
+      _hashistack_credentials.consul.tokens.nomad.server.secret_id if nomad_enable_server else
+      _hashistack_credentials.consul.tokens.nomad.client.secret_id
     }}
   tags: []
 nomad_consul_integration_configuration: >-

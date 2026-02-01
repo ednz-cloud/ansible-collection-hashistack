@@ -1,6 +1,5 @@
 ---
-# task/generate_root file for hashistack_ca
-- name: "Root CA | Create temporary cert directory in {{ hashistack_ca_directory }}" # noqa: run-once[task]
+- name: "generate | generate_root | Create temporary cert directory in {{ hashistack_ca_directory }}" # noqa: run-once[task]
   ansible.builtin.file:
     path: "{{ hashistack_ca_root_dir }}"
     state: directory
@@ -8,16 +7,16 @@
     group: "{{ hashistack_ca_directory_owner }}"
     mode: "0755"
 
-- name: "Root CA | Generate root Authority"
+- name: "generate | generate_root | Generate root Authority"
   run_once: true
   block:
-    - name: "Root CA | Create CA private key"
+    - name: "generate | generate_root | Create CA private key"
       community.crypto.openssl_privatekey:
         path: "{{ hashistack_ca_root_key_path }}"
         owner: "{{ hashistack_ca_directory_owner }}"
         group: "{{ hashistack_ca_directory_owner }}"
 
-    - name: "Root CA | Create CA signing request"
+    - name: "generate | generate_root | Create CA signing request"
       community.crypto.openssl_csr_pipe:
         privatekey_path: "{{ hashistack_ca_root_key_path }}"
         common_name: "{{ omit if hashistack_ca_root_common_name is not defined else hashistack_ca_root_common_name }}"
@@ -32,21 +31,21 @@
         key_usage_critical: true
         use_common_name_for_san: false
         select_crypto_backend: "{{ 'cryptography' if hashistack_ca_use_cryptography else 'auto' }}"
-      register: _hashistack_root_ca_csr
+      register: _hashistack_ca_root_ca_csr
 
-    - name: "Root CA | Create self-signed CA certificate from CSR"
+    - name: "generate | generate_root | Create self-signed CA certificate from CSR"
       community.crypto.x509_certificate:
         path: "{{ hashistack_ca_root_cert_path }}"
-        csr_content: "{{ _hashistack_root_ca_csr.csr }}"
+        csr_content: "{{ _hashistack_ca_root_ca_csr.csr }}"
         privatekey_path: "{{ hashistack_ca_root_key_path }}"
         provider: selfsigned
         owner: "{{ hashistack_ca_directory_owner }}"
         group: "{{ hashistack_ca_directory_owner }}"
 
-    - name: "Root CA | Create self-signed CA certificate from CSR"
+    - name: "generate | generate_root | Create self-signed CA certificate from CSR"
       community.crypto.x509_certificate:
         path: "{{ hashistack_ca_root_cert_path }}"
-        csr_content: "{{ _hashistack_root_ca_csr.csr }}"
+        csr_content: "{{ _hashistack_ca_root_ca_csr.csr }}"
         privatekey_path: "{{ hashistack_ca_root_key_path }}"
         selfsigned_not_after: "+{{ hashistack_ca_root_valid_for }}"
         provider: selfsigned

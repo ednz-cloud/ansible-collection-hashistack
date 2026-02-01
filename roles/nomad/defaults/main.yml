@@ -74,7 +74,7 @@ nomad_server_bootstrap_expect: 1
 nomad_server_configuration:
   enabled: "{{ nomad_enable_server }}"
   data_dir: "{{ nomad_data_dir }}/server"
-  encrypt: "{{ 'mysupersecretgossipencryptionkey'|b64encode }}"
+  encrypt: "{{ 'mysupersecretgossipencryptionkey' | b64encode }}"
   server_join:
     retry_join:
       - "{{ ansible_default_ipv4.address }}"

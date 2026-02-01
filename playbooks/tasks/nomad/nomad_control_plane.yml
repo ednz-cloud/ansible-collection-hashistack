@@ -15,7 +15,7 @@
           block:
             - name: "nomad | nomad_control_plane | Create consul server policy"
               community.general.consul_policy:
-                token: "{{ _credentials.consul.root_token.secret_id }}"
+                token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
                 host: "{{ _consul_host }}"
                 port: "{{ _consul_port }}"
                 scheme: "{{ _consul_scheme }}"
@@ -27,13 +27,13 @@
 
             - name: "nomad | nomad_control_plane | Create consul server token" # noqa: no-handler
               community.general.consul_token:
-                token: "{{ _credentials.consul.root_token.secret_id }}"
+                token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
                 host: "{{ _consul_host }}"
                 port: "{{ _consul_port }}"
                 scheme: "{{ _consul_scheme }}"
                 validate_certs: false
-                accessor_id: "{{ _credentials.consul.tokens.nomad.server.accessor_id }}"
-                secret_id: "{{ _credentials.consul.tokens.nomad.server.secret_id }}"
+                accessor_id: "{{ _hashistack_credentials.consul.tokens.nomad.server.accessor_id }}"
+                secret_id: "{{ _hashistack_credentials.consul.tokens.nomad.server.secret_id }}"
                 policies:
                   - id: "{{ _consul_nomad_server_policy.policy.ID }}"
                 state: present
@@ -43,7 +43,7 @@
           block:
             - name: "nomad | nomad_control_plane | Create consul client policy"
               community.general.consul_policy:
-                token: "{{ _credentials.consul.root_token.secret_id }}"
+                token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
                 host: "{{ _consul_host }}"
                 port: "{{ _consul_port }}"
                 scheme: "{{ _consul_scheme }}"
@@ -55,13 +55,13 @@
 
             - name: "nomad | nomad_control_plane | Create consul client token" # noqa: no-handler
               community.general.consul_token:
-                token: "{{ _credentials.consul.root_token.secret_id }}"
+                token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
                 host: "{{ _consul_host }}"
                 port: "{{ _consul_port }}"
                 scheme: "{{ _consul_scheme }}"
                 validate_certs: false
-                accessor_id: "{{ _credentials.consul.tokens.nomad.client.accessor_id }}"
-                secret_id: "{{ _credentials.consul.tokens.nomad.client.secret_id }}"
+                accessor_id: "{{ _hashistack_credentials.consul.tokens.nomad.client.accessor_id }}"
+                secret_id: "{{ _hashistack_credentials.consul.tokens.nomad.client.secret_id }}"
                 policies:
                   - id: "{{ _consul_nomad_client_policy.policy.ID }}"
                 state: present
@@ -92,7 +92,7 @@
 
     - name: "nomad | nomad_control_plane | Initialize nomad cluster" # noqa: run-once[task]
       ednz_cloud.hashistack.nomad_acl_bootstrap:
-        bootstrap_secret: "{{ _credentials.nomad.root_token.secret_id }}"
+        bootstrap_secret: "{{ _hashistack_credentials.nomad.root_token.secret_id }}"
         api_url: "{{ nomad_api_addr }}"
         tls_verify: false
       register: _nomad_init_secret

@@ -46,9 +46,9 @@ EXAMPLES = r"""
     api_url: "https://127.0.0.1:8200"
     tls_verify: true
     key_shares:
-        - "key1"
-        - "key2"
-        - "key3"
+      - "key1"
+      - "key2"
+      - "key3"
 
 # Example: Unseal Vault cluster with no TLS verification
 - name: Unseal Vault cluster without TLS verification
@@ -56,8 +56,8 @@ EXAMPLES = r"""
     api_url: "https://127.0.0.1:8200"
     tls_verify: false
     key_shares:
-        - "key1"
-        - "key2"
+      - "key1"
+      - "key2"
 """
 
 RETURN = r"""

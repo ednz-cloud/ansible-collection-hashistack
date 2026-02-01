@@ -1,9 +1,6 @@
 ---
-# tasks/test/nomad-api for hashistack_tests
-
-# Required variables for this test
-- name: "Test | Define required variables for this test"
-  set_fact:
+- name: "tests | nomad-api | Define required variables for this test"
+  ansible.builtin.set_fact:
     _hashistack_tests_required_variables:
       - hashistack_tests_nomad_api_addr
       # can be set to empty string if not using ACLs
@@ -13,16 +10,16 @@
       - hashistack_tests_nomad_api_calls_delegation
       - hashistack_tests_nomad_server_count
 
-- name: "Test | Assert required variables are set"
-  assert:
+- name: "tests | nomad-api | Assert required variables are set"
+  ansible.builtin.assert:
     that:
       - item is defined
     fail_msg: "Required variable '{{ item }}' is not defined."
   loop: "{{ _hashistack_tests_required_variables }}"
 
-- name: "Test | nomad api"
+- name: "tests | nomad-api | Nomad api"
   block:
-    - name: "Nomad | Put variable"
+    - name: "tests | nomad-api | Put variable"
       ansible.builtin.uri:
         url: "{{ hashistack_tests_nomad_api_addr }}/v1/var/secret/foobar"
         method: PUT
@@ -33,49 +30,49 @@
           Items:
             foo: "bar"
         status_code: 200
-        return_content: yes
+        return_content: true
       delegate_to: "{{ hashistack_tests_nomad_api_calls_delegation }}"
-      register: nomad_var_put
+      register: _hashistack_tests_nomad_var_put
 
-    - name: "Nomad | Get variable"
+    - name: "tests | nomad-api | Get variable"
       ansible.builtin.uri:
         url: "{{ hashistack_tests_nomad_api_addr }}/v1/var/secret/foobar"
         method: GET
         headers:
           X-Nomad-Token: "{{ hashistack_tests_nomad_token | default(omit) }}"
         status_code: 200
-        return_content: yes
+        return_content: true
       delegate_to: "{{ hashistack_tests_nomad_api_calls_delegation }}"
-      register: nomad_var_get
+      register: _hashistack_tests_nomad_var_get
 
-    - name: "Nomad | Purge variable"
+    - name: "tests | nomad-api | Purge variable"
       ansible.builtin.uri:
         url: "{{ hashistack_tests_nomad_api_addr }}/v1/var/secret/foobar"
         method: DELETE
         headers:
           X-Nomad-Token: "{{ hashistack_tests_nomad_token | default(omit) }}"
         status_code: 204
-        return_content: yes
+        return_content: true
       delegate_to: "{{ hashistack_tests_nomad_api_calls_delegation }}"
-      register: nomad_var_purge
+      register: _hashistack_tests_nomad_var_purge
 
-    - name: "Nomad | Get server members"
+    - name: "tests | nomad-api | Get server members"
       ansible.builtin.uri:
         url: "{{ hashistack_tests_nomad_api_addr }}/v1/status/peers"
         method: GET
         headers:
           X-Nomad-Token: "{{ hashistack_tests_nomad_token | default(omit) }}"
         status_code: 200
-        return_content: yes
+        return_content: true
       delegate_to: "{{ hashistack_tests_nomad_api_calls_delegation }}"
-      register: nomad_status_peers
+      register: _hashistack_tests_nomad_status_peers
 
-    - name: "Nomad | Verify API responses"
+    - name: "tests | nomad-api | Verify API responses"
       ansible.builtin.assert:
         that:
-          - nomad_var_put.status == 200
-          - nomad_var_get.status == 200
-          - nomad_var_purge.status == 204
-          - nomad_status_peers.status == 200
-          - nomad_var_get.json.Items.foo == "bar"
-          - (nomad_status_peers.json | length | int) == hashistack_tests_nomad_server_count | int
+          - _hashistack_tests_nomad_var_put.status == 200
+          - _hashistack_tests_nomad_var_get.status == 200
+          - _hashistack_tests_nomad_var_purge.status == 204
+          - _hashistack_tests_nomad_status_peers.status == 200
+          - _hashistack_tests_nomad_var_get.json.Items.foo == "bar"
+          - (_hashistack_tests_nomad_status_peers.json | length | int) == hashistack_tests_nomad_server_count | int

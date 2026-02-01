@@ -58,7 +58,7 @@ consul_datacenter: "{{ hashistack_consul_datacenter | default(hashistack_default
 hashistack_default_consul_primary_datacenter: "{{ consul_datacenter }}"
 consul_primary_datacenter: "{{ hashistack_consul_primary_datacenter | default(hashistack_default_consul_primary_datacenter) }}"
 
-hashistack_default_consul_gossip_encryption_key: "{{ _credentials.consul.gossip_encryption_key }}"
+hashistack_default_consul_gossip_encryption_key: "{{ _hashistack_credentials.consul.gossip_encryption_key }}"
 consul_gossip_encryption_key: "{{ hashistack_consul_gossip_encryption_key | default(hashistack_default_consul_gossip_encryption_key) }}"
 
 hashistack_default_consul_enable_script_checks: false
@@ -142,7 +142,7 @@ hashistack_default_consul_acl_configuration:
   default_policy: "deny"
   enable_token_persistence: true
   tokens:
-    agent: "{{ _credentials.consul.tokens.agent.secret_id }}"
+    agent: "{{ _hashistack_credentials.consul.tokens.agent.secret_id }}"
 consul_acl_configuration: >-
   {{
     hashistack_default_consul_acl_configuration |

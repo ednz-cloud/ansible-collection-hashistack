@@ -33,7 +33,7 @@ internal_tls_externally_managed_certs: false
 # hashistack_consul_domain: consul
 # hashistack_consul_datacenter: dc1
 # hashistack_consul_primary_datacenter: "{{ consul_datacenter }}"
-# hashistack_consul_gossip_encryption_key: "{{ _credentials.consul.gossip_encryption_key }}"
+# hashistack_consul_gossip_encryption_key: "{{ _hashistack_credentials.consul.gossip_encryption_key }}"
 # hashistack_consul_enable_script_checks: false
 
 # hashistack_consul_extra_files_list: []
