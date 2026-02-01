@@ -35,3 +35,53 @@ include:
         kv/data/infrastructure/openstack/projects/pcp_w3rxsrj/users/tofu application_credential_secret | OS_APPLICATION_CREDENTIAL_SECRET
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/molecule-e2e-tests.yml
+    inputs:
+      stage: e2e-tests
+      identifier: cni
+      scenarios:
+        - cni__default__openstack
+        - cni__static_version__openstack
+      scenario_configs:
+        - '{"MOLECULE_TEST_OS":"Debian 12 bookworm","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Debian 13 trixie","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 22.04 LTS Jammy Jellyfish","MOLECULE_TEST_USER":"ubuntu"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 24.04 LTS Noble Numbat","MOLECULE_TEST_USER":"ubuntu"}'
+      needs:
+        - job: e2e-tests:pre:vault:get-secrets:pcp-w3rxsrj-dc4-a
+          artifacts: true
+        - job: e2e-tests:pre:set-molecule-env
+          artifacts: true
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+          changes:
+            - roles/cni/**
+            - extensions/molecule/cni__*/**
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/molecule-e2e-tests.yml
+    inputs:
+      stage: e2e-tests
+      identifier: consul
+      scenarios:
+        - consul__default__openstack
+        - consul__with_acl_enabled__openstack
+      scenario_configs:
+        - '{"MOLECULE_TEST_OS":"Debian 12 bookworm","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Debian 13 trixie","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 22.04 LTS Jammy Jellyfish","MOLECULE_TEST_USER":"ubuntu"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 24.04 LTS Noble Numbat","MOLECULE_TEST_USER":"ubuntu"}'
+      needs:
+        - job: e2e-tests:pre:vault:get-secrets:pcp-w3rxsrj-dc4-a
+          artifacts: true
+        - job: e2e-tests:pre:set-molecule-env
+          artifacts: true
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+          changes:
+            - roles/cni/**
+            - extensions/molecule/consul__*/**
