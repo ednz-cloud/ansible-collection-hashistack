@@ -85,3 +85,99 @@ include:
           changes:
             - roles/cni/**
             - extensions/molecule/consul__*/**
+
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/molecule-e2e-tests.yml
+    inputs:
+      stage: e2e-tests
+      identifier: full_cluster
+      scenarios:
+        - full_cluster__no_tls_multi_node__openstack
+        - full_cluster__tls_multi_node__openstack
+      scenario_configs:
+        - '{"MOLECULE_TEST_OS":"Debian 13 trixie","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 24.04 LTS Noble Numbat","MOLECULE_TEST_USER":"ubuntu"}'
+      needs:
+        - job: e2e-tests:pre:vault:get-secrets:pcp-w3rxsrj-dc4-a
+          artifacts: true
+        - job: e2e-tests:pre:set-molecule-env
+          artifacts: true
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+          changes:
+            - roles/**
+            - extensions/molecule/full_cluster__*/**
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/molecule-e2e-tests.yml
+    inputs:
+      stage: e2e-tests
+      identifier: nomad
+      scenarios:
+        - nomad__default__openstack
+        - nomad__with_acl_enabled__openstack
+      scenario_configs:
+        - '{"MOLECULE_TEST_OS":"Debian 12 bookworm","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Debian 13 trixie","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 22.04 LTS Jammy Jellyfish","MOLECULE_TEST_USER":"ubuntu"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 24.04 LTS Noble Numbat","MOLECULE_TEST_USER":"ubuntu"}'
+      needs:
+        - job: e2e-tests:pre:vault:get-secrets:pcp-w3rxsrj-dc4-a
+          artifacts: true
+        - job: e2e-tests:pre:set-molecule-env
+          artifacts: true
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+          changes:
+            - roles/nomad/**
+            - extensions/molecule/nomad__*/**
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/molecule-e2e-tests.yml
+    inputs:
+      stage: e2e-tests
+      identifier: nomad_cluster
+      scenarios:
+        - nomad_cluster__tls_multi_node__openstack
+      scenario_configs:
+        - '{"MOLECULE_TEST_OS":"Debian 13 trixie","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 24.04 LTS Noble Numbat","MOLECULE_TEST_USER":"ubuntu"}'
+      needs:
+        - job: e2e-tests:pre:vault:get-secrets:pcp-w3rxsrj-dc4-a
+          artifacts: true
+        - job: e2e-tests:pre:set-molecule-env
+          artifacts: true
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+          changes:
+            - roles/nomad/**
+            - extensions/molecule/nomad_cluster__*/**
+
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/molecule-e2e-tests.yml
+    inputs:
+      stage: e2e-tests
+      identifier: vault
+      scenarios:
+        - vault__default__openstack
+        - vault__with_raft_enabled__openstack
+      scenario_configs:
+        - '{"MOLECULE_TEST_OS":"Debian 12 bookworm","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Debian 13 trixie","MOLECULE_TEST_USER":"debian"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 22.04 LTS Jammy Jellyfish","MOLECULE_TEST_USER":"ubuntu"}'
+        - '{"MOLECULE_TEST_OS":"Ubuntu 24.04 LTS Noble Numbat","MOLECULE_TEST_USER":"ubuntu"}'
+      needs:
+        - job: e2e-tests:pre:vault:get-secrets:pcp-w3rxsrj-dc4-a
+          artifacts: true
+        - job: e2e-tests:pre:set-molecule-env
+          artifacts: true
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
+          changes:
+            - roles/vault/**
+            - extensions/molecule/vault__*/**
