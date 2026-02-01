@@ -1,5 +1,4 @@
 ---
-# hashistack prepare playbook
 - name: "Bootstrap"
   hosts: common
   gather_facts: true
