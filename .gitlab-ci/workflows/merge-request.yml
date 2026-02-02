@@ -86,7 +86,6 @@ include:
             - roles/cni/**
             - extensions/molecule/consul__*/**
 
-
   - project: ednz-cloud/gitlab-ci-library
     ref: main
     file: includes/molecule-e2e-tests.yml

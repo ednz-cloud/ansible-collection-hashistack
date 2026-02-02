@@ -3,19 +3,27 @@
   ansible.builtin.import_playbook: ednz_cloud.hashistack.credentials.yml
   vars:
     hashistack_configuration_directory: "{{ molecule_scenario_directory }}/etc/hashistack"
+  environment:
+    USER: "{{ lookup('env', 'USER') | default('root') }}"
 
 - name: Include bootstrap playbook
   ansible.builtin.import_playbook: ednz_cloud.hashistack.bootstrap.yml
   vars:
     hashistack_configuration_directory: "{{ molecule_scenario_directory }}/etc/hashistack"
+  environment:
+    USER: "{{ lookup('env', 'USER') | default('root') }}"
 
 - name: Include preflight playbook
   ansible.builtin.import_playbook: ednz_cloud.hashistack.preflight.yml
   vars:
     hashistack_configuration_directory: "{{ molecule_scenario_directory }}/etc/hashistack"
+  environment:
+    USER: "{{ lookup('env', 'USER') | default('root') }}"
 
 - name: Include certificates playbook
   ansible.builtin.import_playbook: ednz_cloud.hashistack.certificates.yml
   vars:
     hashistack_ca_action: root_ca,int_ca,leaf_cert
     hashistack_configuration_directory: "{{ molecule_scenario_directory }}/etc/hashistack"
+  environment:
+    USER: "{{ lookup('env', 'USER') | default('root') }}"
