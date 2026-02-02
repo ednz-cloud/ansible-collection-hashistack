@@ -3,5 +3,3 @@
   ansible.builtin.import_playbook: ednz_cloud.hashistack.deploy.yml
   vars:
     hashistack_configuration_directory: "{{ lookup('env', 'PWD') }}/molecule/full_cluster__no_tls_multi_node__openstack/etc/hashistack"
-  environment:
-    USER: "{{ lookup('env', 'USER') | default('root') }}"

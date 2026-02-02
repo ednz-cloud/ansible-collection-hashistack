@@ -11,6 +11,7 @@ e2e-tests:pre:set-molecule-env:
   script:
     - echo "OS_AUTH_TYPE=${OS_AUTH_TYPE}" >> e2e-tests:pre:set-molecule-env.env
     - echo "OS_INTERFACE=${OS_INTERFACE}" >> e2e-tests:pre:set-molecule-env.env
+    - echo "USER=root" >> e2e-tests:pre:set-molecule-env.env
   artifacts:
     expire_in: 1 hour
     reports:
