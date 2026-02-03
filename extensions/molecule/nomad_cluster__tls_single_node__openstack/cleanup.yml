@@ -7,10 +7,10 @@
   tasks:
     - name: "Delete secrets directory"
       ansible.builtin.file:
-        path: "{{ lookup('env', 'PWD') }}/molecule/nomad_cluster__tls_single_node__openstack/etc/hashistack/secrets"
+        path: "{{ molecule_scenario_directory }}/etc/hashistack/secrets"
         state: absent
 
     - name: "Delete certificates directory"
       ansible.builtin.file:
-        path: "{{ lookup('env', 'PWD') }}/molecule/nomad_cluster__tls_single_node__openstack/etc/hashistack/certificates"
+        path: "{{ molecule_scenario_directory }}/etc/hashistack/certificates"
         state: absent
