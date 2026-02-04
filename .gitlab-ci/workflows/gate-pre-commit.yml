@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json
+include:
+  - project: ednz-cloud/gitlab-ci-library
+    ref: main
+    file: includes/pre-commit.yml
+    inputs:
+      stage: gate
+      rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
