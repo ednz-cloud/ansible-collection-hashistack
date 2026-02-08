@@ -1,7 +1,7 @@
 ---
 roles: []
 collections:
-  - name: https://github.com/ednz-cloud/ansible-collection-utils.git
+  - name: ssh://git@gitlab.ednz.fr:2022/ednz-cloud/ansible/collections/ednz_cloud.utils.git
     type: git
     version: v0.11.1
   - name: community.crypto
