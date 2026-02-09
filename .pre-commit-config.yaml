@@ -15,7 +15,7 @@ repos:
       - id: yamllint
         args: [-c=./.yamllint]
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.31.0
+    rev: v4.13.7
     hooks:
       - id: commitizen
       - id: commitizen-branch
