@@ -5,7 +5,7 @@ description = "ednz_cloud.hashistack Ansible collection"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 dependencies = [
-  "ansible-core>=2.17,<2.19",
+  "ansible-core>=2.20,<2.21",
   "ansible-lint>=26.1.1",
   "hvac>=2.4.0",
   "molecule>=25.12.0",
