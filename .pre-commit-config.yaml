@@ -29,7 +29,7 @@ repos:
         args: [--fix]
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.10.1
+    rev: 0.10.2
     hooks:
       - id: uv-lock
         name: check uv lockfile
