@@ -142,6 +142,15 @@
           settings.
       when: not _etc_localtime.stat.exists
 
+    - name: "Ensure hostnames are unique"
+      ansible.builtin.assert:
+        that:
+          - groups['all'] | map('extract', hostvars, ['ansible_facts', 'hostname']) | list | unique | length
+            ==
+            groups['all'] | map('extract', hostvars, ['ansible_facts', 'hostname']) | list | length
+        fail_msg: "Duplicate ansible_hostname detected in inventory!"
+        success_msg: "All ansible_hostnames are unique."
+
     - name: "Checking the api_interface is present"
       ansible.builtin.fail:
         msg: "Please check the api_interface property - interface {{ api_interface }} not found"
