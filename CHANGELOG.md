@@ -1,3 +1,14 @@
+## v0.14.0 (2026-02-21)
+
+### Feat
+
+- **playbooks/preflight**: ensure hostnames are unique
+
+### Fix
+
+- don't set group ownership when not running deployment on linux
+- bump requirements for ednz_cloud.utils to 0.11.3
+
 ## v0.13.5 (2026-02-09)
 
 ### Fix
