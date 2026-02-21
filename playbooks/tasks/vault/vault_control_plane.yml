@@ -69,7 +69,7 @@
         content: "{{ _vault_init_secret.state | to_nice_yaml(indent=2) }}"
         dest: "{{ hashistack_sub_configuration_directories.secrets }}/vault.yml"
         owner: "{{ lookup('env', 'USER') }}"
-        group: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') if ansible_system == 'Linux' else omit }}"
         mode: "0644"
       when:
         - vault_init_server
