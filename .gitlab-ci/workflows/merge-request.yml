@@ -59,7 +59,7 @@ include:
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
           changes:
-            - roles/cni/**
+            - roles/cni/**/*
             - extensions/molecule/cni__*/**
 
   - project: ednz-cloud/gitlab-ci-library
@@ -84,7 +84,7 @@ include:
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
           changes:
-            - roles/cni/**
+            - roles/cni/**/*
             - extensions/molecule/consul__*/**
 
   - project: ednz-cloud/gitlab-ci-library
@@ -107,7 +107,8 @@ include:
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
           changes:
-            - roles/**
+            - roles/**/*
+            - playbooks/**/*
             - extensions/molecule/full_cluster__*/**
 
   - project: ednz-cloud/gitlab-ci-library
@@ -132,7 +133,7 @@ include:
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
           changes:
-            - roles/nomad/**
+            - roles/nomad/**/*
             - extensions/molecule/nomad__*/**
 
   - project: ednz-cloud/gitlab-ci-library
@@ -154,7 +155,7 @@ include:
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
           changes:
-            - roles/nomad/**
+            - roles/nomad/**/*
             - extensions/molecule/nomad_cluster__*/**
 
   - project: ednz-cloud/gitlab-ci-library
@@ -179,5 +180,5 @@ include:
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
           changes:
-            - roles/vault/**
+            - roles/vault/**/*
             - extensions/molecule/vault__*/**
