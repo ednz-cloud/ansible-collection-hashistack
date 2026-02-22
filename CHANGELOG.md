@@ -1,3 +1,11 @@
+## v0.14.1 (2026-02-22)
+
+### Fix
+
+- **roles/nomad**: make recursive copy of extra files idempotent
+- **roles/consul**: make recursive copy of extra files idempotent
+- **core**: correctly refresh root CA in trust store on renewal
+
 ## v0.14.0 (2026-02-21)
 
 ### Feat
