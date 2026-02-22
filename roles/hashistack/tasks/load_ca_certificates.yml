@@ -46,6 +46,6 @@
       register: _hashistack_usr_local_share_ca_certificates
 
     - name: "load_ca_certificates | Update the trust store" # noqa: no-handler
-      ansible.builtin.command: update-ca-certificates
+      ansible.builtin.command: update-ca-certificates --fresh
       changed_when: false
       when: _hashistack_usr_local_share_ca_certificates.changed
