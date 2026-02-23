@@ -60,6 +60,7 @@ hashistack_ca_intermediate_name_constraints_permitted:
   - "DNS:.{{ hashistack_ca_domain }}"
   - DNS:.nomad
   - DNS:.consul
+  - DNS:.internal
   - DNS:localhost
   - IP:192.168.0.0/16
   - IP:172.16.0.0/16
@@ -112,6 +113,7 @@ hashistack_ca_nomad_csr_sans: >
     + ([ "DNS:server." + nomad_region + ".nomad" ] if nomad_enable_server else [])
     + ([ "DNS:client." + nomad_region + ".nomad" ] if nomad_enable_client else [])
     + ([ "DNS:nomad.service.consul" ] if (nomad_enable_server and enable_consul) else [])
+  + ([ "DNS:" + hashistack_nomad_internal_name ] if nomad_enable_server else [])
   }}
 
 ###########################

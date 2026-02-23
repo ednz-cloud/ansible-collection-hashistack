@@ -82,3 +82,31 @@ nomad_api_port:
 ############################################################
 
 vault_init_server: "{{ (inventory_hostname == groups['vault_servers'][0]) | bool }}"
+
+vault_api_scheme: "{{ 'https' if vault_enable_tls else 'http' }}"
+vault_api_port:
+  http: 8200
+  https: 8200
+
+####################################################################
+# internal DNS names -- managed via /etc/hosts on all cluster nodes #
+# Override these if you have real DNS that resolves these names     #
+####################################################################
+
+hashistack_consul_internal_name: "consul.internal"
+hashistack_vault_internal_name: "vault.internal"
+hashistack_nomad_internal_name: "nomad.internal"
+
+# Derived stable URLs built from the internal DNS names + port/scheme.
+# Used for service-to-service communication and the Nomad JWKS endpoint.
+# Override hashistack_*_internal_name (or these directly) to use a load
+# balancer address or a real DNS name (e.g. nomad.service.consul).
+hashistack_consul_internal_url: >-
+  {{ consul_api_scheme }}://{{ hashistack_consul_internal_name }}:{{ consul_api_port[consul_api_scheme] }}
+hashistack_vault_internal_url: >-
+  {{ vault_api_scheme }}://{{ hashistack_vault_internal_name }}:{{ vault_api_port[vault_api_scheme] }}
+hashistack_nomad_internal_url: >-
+  {{ nomad_api_scheme }}://{{ hashistack_nomad_internal_name }}:{{ nomad_api_port[nomad_api_scheme] }}
+
+# JWKS endpoint used by the Consul JWT auth method to validate Nomad workload tokens.
+nomad_consul_jwks_url: "{{ hashistack_nomad_internal_url }}/.well-known/jwks.json"

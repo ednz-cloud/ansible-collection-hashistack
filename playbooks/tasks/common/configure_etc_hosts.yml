@@ -1,0 +1,40 @@
+---
+# Adds stable internal DNS names to /etc/hosts on all cluster nodes.
+# One entry is written per server so getaddrinfo returns all IPs,
+# giving clients basic failover without requiring a DNS server.
+#
+# For production deployments with a load balancer or real DNS, override
+# hashistack_{consul,vault,nomad}_internal_name in your globals.yml to
+# match your DNS name — the /etc/hosts block will still be written but
+# your DNS will win as long as it resolves before /etc/hosts (or simply
+# set hashistack_manage_etc_hosts: false to skip this task entirely).
+
+- name: "common | configure_etc_hosts | Add consul internal DNS entries"
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED: {{ hashistack_consul_internal_name }}"
+    block: |
+      {% for host in (groups['consul_servers'] | default([])) %}
+      {{ hostvars[host].api_interface_address }} {{ hashistack_consul_internal_name }}
+      {% endfor %}
+  when: enable_consul | bool
+
+- name: "common | configure_etc_hosts | Add vault internal DNS entries"
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED: {{ hashistack_vault_internal_name }}"
+    block: |
+      {% for host in (groups['vault_servers'] | default([])) %}
+      {{ hostvars[host].api_interface_address }} {{ hashistack_vault_internal_name }}
+      {% endfor %}
+  when: enable_vault | bool
+
+- name: "common | configure_etc_hosts | Add nomad internal DNS entries"
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED: {{ hashistack_nomad_internal_name }}"
+    block: |
+      {% for host in (groups['nomad_servers'] | default([])) %}
+      {{ hostvars[host].api_interface_address }} {{ hashistack_nomad_internal_name }}
+      {% endfor %}
+  when: enable_nomad | bool
