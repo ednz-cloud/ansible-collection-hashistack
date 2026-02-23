@@ -1,0 +1,88 @@
+---
+- name: "nomad | nomad_consul_jwt_auth | Setup Consul JWT authentication for Nomad workloads"
+  when:
+    - nomad_init_server
+    - nomad_enable_consul_integration | bool
+    - nomad_enable_consul_workload_identity | bool
+  vars:
+    _consul_host: "{{ hostvars[groups['consul_servers'][0]].api_interface_address }}"
+    _consul_port: "{{ hostvars[groups['consul_servers'][0]].consul_api_port[hostvars[groups['consul_servers'][0]].consul_api_scheme] }}"
+    _consul_scheme: "{{ hostvars[groups['consul_servers'][0]].consul_api_scheme }}"
+  block:
+    - name: "nomad | nomad_consul_jwt_auth | Create nomad tasks policy"
+      community.general.consul_policy:
+        token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
+        host: "{{ _consul_host }}"
+        port: "{{ _consul_port }}"
+        scheme: "{{ _consul_scheme }}"
+        validate_certs: false
+        state: present
+        name: nomad-tasks-policy
+        rules: "{{ nomad_consul_tasks_policy }}"
+
+    - name: "nomad | nomad_consul_jwt_auth | Create nomad tasks role"
+      community.general.consul_role:
+        token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
+        host: "{{ _consul_host }}"
+        port: "{{ _consul_port }}"
+        scheme: "{{ _consul_scheme }}"
+        validate_certs: false
+        state: present
+        name: nomad-default-tasks
+        policies:
+          - name: nomad-tasks-policy
+
+    - name: "nomad | nomad_consul_jwt_auth | Create nomad-workloads JWT auth method"
+      community.general.consul_auth_method:
+        token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
+        host: "{{ _consul_host }}"
+        port: "{{ _consul_port }}"
+        scheme: "{{ _consul_scheme }}"
+        validate_certs: false
+        state: present
+        name: nomad-workloads
+        type: jwt
+        description: "Login method for Nomad workloads using workload identities"
+        token_locality: local
+        config:
+          BoundAudiences:
+            - "consul.io"
+          ClaimMappings:
+            consul_namespace: consul_namespace
+            nomad_job_id: nomad_job_id
+            nomad_namespace: nomad_namespace
+            nomad_service: nomad_service
+            nomad_task: nomad_task
+          JWKSURL: "{{ nomad_consul_jwks_url }}"
+          JWTSupportedAlgs:
+            - RS256
+
+    - name: "nomad | nomad_consul_jwt_auth | Create binding rule for Nomad services"
+      community.general.consul_binding_rule:
+        name: nomad-services
+        token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
+        host: "{{ _consul_host }}"
+        port: "{{ _consul_port }}"
+        scheme: "{{ _consul_scheme }}"
+        validate_certs: false
+        state: present
+        auth_method: nomad-workloads
+        description: "Binding rule for Nomad services authenticated using a workload identity"
+        selector: '"nomad_service" in value'
+        bind_type: service
+        bind_name: "${value.nomad_service}"
+
+    - name: "nomad | nomad_consul_jwt_auth | Create binding rule for Nomad tasks"
+      community.general.consul_binding_rule:
+        name: nomad-tasks
+        token: "{{ _hashistack_credentials.consul.root_token.secret_id }}"
+        host: "{{ _consul_host }}"
+        port: "{{ _consul_port }}"
+        scheme: "{{ _consul_scheme }}"
+        validate_certs: false
+        state: present
+        auth_method: nomad-workloads
+        description: "Binding rule for Nomad tasks authenticated using a workload identity"
+        selector: '"nomad_service" not in value'
+        bind_type: role
+        bind_name: "nomad-${value.nomad_namespace}-tasks"

@@ -16,6 +16,15 @@
       tags:
         - always
 
+    - name: "Configure internal DNS names in /etc/hosts"
+      ansible.builtin.include_tasks:
+        file: tasks/common/configure_etc_hosts.yml
+        apply:
+          tags:
+            - always
+      tags:
+        - always
+
     # Consul nodes deployment
     - name: "Deploy Consul"
       tags:

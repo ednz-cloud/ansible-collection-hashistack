@@ -192,6 +192,19 @@ nomad_consul_integration_client_configuration:
 nomad_consul_integration_client_tls_configuration:
   grpc_ca_file: "/etc/ssl/certs/ca-certificates.crt"
 
+# Workload identity (Nomad 1.10+, servers only).
+# Defaults to nomad_enable_consul_integration so both are on/off together.
+# Set to false explicitly to keep consul integration without workload identity.
+nomad_enable_consul_workload_identity: "{{ nomad_enable_consul_integration | bool }}"
+
+nomad_consul_service_identity_configuration:
+  aud: ["consul.io"]
+  ttl: "1h"
+
+nomad_consul_task_identity_configuration:
+  aud: ["consul.io"]
+  ttl: "1h"
+
 ############################
 # nomad vault integration #
 ############################

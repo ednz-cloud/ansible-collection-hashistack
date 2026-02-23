@@ -285,6 +285,10 @@ hashistack_default_nomad_enable_consul_integration: "{{ enable_consul | bool }}"
 nomad_enable_consul_integration: >-
   {{ hashistack_nomad_enable_consul_integration | default(hashistack_default_nomad_enable_consul_integration) }}
 
+hashistack_default_nomad_enable_consul_workload_identity: "{{ hashistack_default_nomad_enable_consul_integration | bool }}"
+nomad_enable_consul_workload_identity: >-
+  {{ hashistack_nomad_enable_consul_workload_identity | default(hashistack_default_nomad_enable_consul_workload_identity) }}
+
 hashistack_default_nomad_consul_integration_configuration:
   address: >-
     127.0.0.1:{{ consul_api_port[consul_api_scheme] }}
@@ -336,6 +340,27 @@ nomad_consul_integration_client_tls_configuration: >-
     combine((hashistack_nomad_consul_integration_client_tls_configuration | default({})), recursive=true)
   }}
 
+
+hashistack_default_nomad_consul_service_identity_configuration:
+  aud: ["consul.io"]
+  ttl: "1h"
+nomad_consul_service_identity_configuration: >-
+  {{
+    hashistack_default_nomad_consul_service_identity_configuration |
+    combine((hashistack_nomad_consul_service_identity_configuration | default({})), recursive=true)
+  }}
+
+hashistack_default_nomad_consul_task_identity_configuration:
+  aud: ["consul.io"]
+  ttl: "1h"
+nomad_consul_task_identity_configuration: >-
+  {{
+    hashistack_default_nomad_consul_task_identity_configuration |
+    combine((hashistack_nomad_consul_task_identity_configuration | default({})), recursive=true)
+  }}
+
+# Agent registration policy for Nomad servers.
+# acl/mesh write are no longer needed: workloads authenticate via JWT (Nomad 1.10+).
 nomad_consul_integration_server_policy: |
   agent_prefix "" {
     policy = "read"
@@ -346,9 +371,8 @@ nomad_consul_integration_server_policy: |
   service_prefix "" {
     policy = "write"
   }
-  acl  = "write"
-  mesh = "write"
 
+# Agent registration policy for Nomad clients.
 nomad_consul_integration_client_policy: |
   agent_prefix "" {
     policy = "read"
@@ -358,6 +382,19 @@ nomad_consul_integration_client_policy: |
   }
   service_prefix "" {
     policy = "write"
+  }
+
+# Policy applied to Nomad tasks via the JWT auth method binding rule.
+# Grants tasks read access to nodes, services, and the KV store.
+nomad_consul_tasks_policy: |
+  node_prefix "" {
+    policy = "read"
+  }
+  service_prefix "" {
+    policy = "read"
+  }
+  key_prefix "" {
+    policy = "read"
   }
 
 ############################

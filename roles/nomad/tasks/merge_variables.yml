@@ -49,6 +49,20 @@
               combine(_config_to_merge, recursive=true)
               }}"
 
+    - name: "merge_variables | Merge consul workload identity configuration for nomad servers"
+      when:
+        - nomad_enable_server
+        - nomad_enable_consul_workload_identity | bool
+      vars:
+        _config_to_merge:
+          service_identity: "{{ nomad_consul_service_identity_configuration }}"
+          task_identity: "{{ nomad_consul_task_identity_configuration }}"
+      ansible.builtin.set_fact:
+        nomad_consul_integration_configuration: "{{
+          nomad_consul_integration_configuration |
+          combine(_config_to_merge, recursive=true)
+          }}"
+
     - name: "merge_variables | Merge consul configuration for nomad clients"
       when:
         - nomad_enable_client

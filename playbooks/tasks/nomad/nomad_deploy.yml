@@ -9,6 +9,17 @@
       tags:
         - nomad_servers
 
+    - name: "nomad | nomad_deploy | Setup Consul JWT auth for Nomad workload identities"
+      ansible.builtin.import_tasks:
+        file: nomad_consul_jwt_auth.yml
+      when:
+        - nomad_init_server
+        - enable_consul | bool
+        - nomad_enable_consul_integration | bool
+        - nomad_enable_consul_workload_identity | bool
+      tags:
+        - nomad_servers
+
     - name: "nomad | nomad_deploy | Deploy Nomad Clients"
       ansible.builtin.import_tasks:
         file: nomad_clients.yml
