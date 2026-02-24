@@ -1,6 +1,6 @@
 [project]
 name = "ednz_cloud.hashistack"
-version = "0.14.1"
+version = "0.14.2"
 description = "ednz_cloud.hashistack Ansible collection"
 readme = "README.md"
 requires-python = ">=3.14,<3.15"

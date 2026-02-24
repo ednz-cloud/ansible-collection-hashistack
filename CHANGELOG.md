@@ -1,3 +1,9 @@
+## v0.14.2 (2026-02-24)
+
+### Fix
+
+- **roles/hashitack_ca**: add group variable to allow different user/group ownership of certificates
+
 ## v0.14.1 (2026-02-22)
 
 ### Fix
