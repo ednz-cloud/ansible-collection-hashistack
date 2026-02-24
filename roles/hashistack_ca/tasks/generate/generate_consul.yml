@@ -14,7 +14,7 @@
       community.crypto.openssl_privatekey:
         path: "{{ hashistack_ca_consul_key_path }}"
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
 
     - name: "generate | generate_consul | Create CSRs for Consul servers"
       community.crypto.openssl_csr_pipe:
@@ -43,7 +43,7 @@
         ownca_not_after: "+{{ hashistack_ca_leaf_valid_for }}"
         ownca_not_before: "-1d"
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
         mode: "0644"
 
     - name: "generate | generate_consul | Generate fullchain certificate"
@@ -71,5 +71,5 @@
               {{ _hashistack_ca_root_crt['content'] | b64decode }}"
             dest: "{{ hashistack_ca_consul_fullchain_path }}"
             owner: "{{ hashistack_ca_directory_owner }}"
-            group: "{{ hashistack_ca_directory_owner }}"
+            group: "{{ hashistack_ca_directory_group }}"
             mode: "0644"

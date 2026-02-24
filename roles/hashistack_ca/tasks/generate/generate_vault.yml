@@ -4,7 +4,7 @@
     path: "{{ hashistack_ca_vault_dir }}"
     state: directory
     owner: "{{ hashistack_ca_directory_owner }}"
-    group: "{{ hashistack_ca_directory_owner }}"
+    group: "{{ hashistack_ca_directory_group }}"
     mode: "0755"
 
 - name: "generate | generate_vault | Create Vault certificates"
@@ -13,7 +13,7 @@
       community.crypto.openssl_privatekey:
         path: "{{ hashistack_ca_vault_key_path }}"
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
 
     - name: "generate | generate_vault | Create CSRs for Vault servers"
       community.crypto.openssl_csr_pipe:
@@ -42,7 +42,7 @@
         ownca_not_after: "+{{ hashistack_ca_leaf_valid_for }}"
         ownca_not_before: "-1d"
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
         mode: "0644"
 
     - name: "generate | generate_vault | Generate fullchain certificate"
@@ -70,5 +70,5 @@
               {{ _hashistack_ca_root_crt['content'] | b64decode }}"
             dest: "{{ hashistack_ca_vault_fullchain_path }}"
             owner: "{{ hashistack_ca_directory_owner }}"
-            group: "{{ hashistack_ca_directory_owner }}"
+            group: "{{ hashistack_ca_directory_group }}"
             mode: "0644"

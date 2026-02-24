@@ -4,7 +4,7 @@
     path: "{{ hashistack_ca_intermediate_dir }}"
     state: directory
     owner: "{{ hashistack_ca_directory_owner }}"
-    group: "{{ hashistack_ca_directory_owner }}"
+    group: "{{ hashistack_ca_directory_group }}"
     mode: "0755"
 
 - name: "generate | generate_intermediate | Generate internal certificates"
@@ -13,7 +13,7 @@
       community.crypto.openssl_privatekey:
         path: "{{ hashistack_ca_intermediate_key_path }}"
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
 
     - name: "generate | generate_intermediate | Create intermediate CA signing request"
       community.crypto.openssl_csr_pipe:
@@ -50,5 +50,5 @@
         ownca_privatekey_path: "{{ hashistack_ca_root_key_path }}"
         provider: ownca
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
         ownca_not_after: "+{{ hashistack_ca_intermediate_valid_for }}"

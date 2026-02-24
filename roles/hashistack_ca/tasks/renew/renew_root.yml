@@ -32,7 +32,7 @@
         path: "{{ hashistack_ca_root_backup_dir }}"
         state: directory
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
         mode: "0755"
 
     - name: "renew | renew_root | Format expiration date for backup"

@@ -4,7 +4,7 @@
     path: "{{ hashistack_ca_root_dir }}"
     state: directory
     owner: "{{ hashistack_ca_directory_owner }}"
-    group: "{{ hashistack_ca_directory_owner }}"
+    group: "{{ hashistack_ca_directory_group }}"
     mode: "0755"
 
 - name: "generate | generate_root | Generate root Authority"
@@ -14,7 +14,7 @@
       community.crypto.openssl_privatekey:
         path: "{{ hashistack_ca_root_key_path }}"
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
 
     - name: "generate | generate_root | Create CA signing request"
       community.crypto.openssl_csr_pipe:
@@ -40,7 +40,7 @@
         privatekey_path: "{{ hashistack_ca_root_key_path }}"
         provider: selfsigned
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
 
     - name: "generate | generate_root | Create self-signed CA certificate from CSR"
       community.crypto.x509_certificate:
@@ -50,4 +50,4 @@
         selfsigned_not_after: "+{{ hashistack_ca_root_valid_for }}"
         provider: selfsigned
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"

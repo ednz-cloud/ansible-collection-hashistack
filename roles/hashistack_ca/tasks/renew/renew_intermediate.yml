@@ -49,7 +49,7 @@
         path: "{{ hashistack_ca_intermediate_backup_dir }}"
         state: directory
         owner: "{{ hashistack_ca_directory_owner }}"
-        group: "{{ hashistack_ca_directory_owner }}"
+        group: "{{ hashistack_ca_directory_group }}"
         mode: "0755"
 
     - name: "renew | renew_intermediate | Format expiration date for backup"
