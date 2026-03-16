@@ -118,6 +118,8 @@ hashistack_base_nomad_server_configuration:
   enabled: "{{ nomad_enable_server }}"
   data_dir: "{{ nomad_data_dir }}/server"
   encrypt: "{{ _hashistack_credentials.nomad.gossip_encryption_key }}"
+  bootstrap_expect: "{{ nomad_server_bootstrap_expect | int }}"
+
 
 hashistack_default_nomad_server_configuration: >-
   {{ hashistack_base_nomad_server_configuration | combine(hashistack_base_nomad_server_join_configuration) }}

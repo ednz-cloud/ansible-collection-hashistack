@@ -1,14 +1,5 @@
 ---
 # task/merge_variables file for nomad
-- name: "merge_variables | Merge stringified configuration"
-  vars:
-    _config_to_merge: "{{ nomad_configuration_string }}"
-  ansible.builtin.set_fact:
-    nomad_configuration: "{{
-      nomad_configuration |
-      combine(_config_to_merge | from_yaml, recursive=true)
-      }}"
-
 - name: "merge_variables | Merge addresses configuration"
   vars:
     _config_to_merge: "{{ nomad_address_configuration }}"
