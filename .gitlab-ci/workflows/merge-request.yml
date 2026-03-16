@@ -84,7 +84,7 @@ include:
       rules:
         - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^master|main$/'
           changes:
-            - roles/cni/**/*
+            - roles/consul/**/*
             - extensions/molecule/consul__*/**
 
   - project: ednz-cloud/gitlab-ci-library
