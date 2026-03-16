@@ -1,16 +1,7 @@
 ---
-- name: "merge_variables | Merge stringified configuration"
+- name: "merge_variables | Merge server specific configuration"
   vars:
-    _config_to_merge: "{{ consul_configuration_string }}"
-  ansible.builtin.set_fact:
-    consul_configuration: "{{
-      consul_configuration |
-      combine(_config_to_merge | from_yaml, recursive=true)
-      }}"
-
-- name: "merge_variables | Merge server specific stringified configuration"
-  vars:
-    _config_to_merge: "{{ consul_server_configuration_string }}"
+    _config_to_merge: "{{ consul_server_configuration }}"
   ansible.builtin.set_fact:
     consul_configuration: "{{
       consul_configuration |
