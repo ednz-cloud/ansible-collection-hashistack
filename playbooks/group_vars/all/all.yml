@@ -63,7 +63,7 @@ consul_api_port:
   https: 8501
 consul_grpc_port:
   http: 8502
-  https: 8503
+  https: 8502
 
 ############################################################
 # nomad -- DO NOT TWEAK UNLESS YOU KNOW WHAT YOU ARE DOING #

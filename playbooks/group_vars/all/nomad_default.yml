@@ -332,8 +332,7 @@ nomad_consul_integration_client_configuration: >-
     combine((hashistack_nomad_consul_integration_client_configuration | default({})), recursive=true)
   }}
 
-hashistack_default_nomad_consul_integration_client_tls_configuration:
-  grpc_ca_file: "/etc/ssl/certs/ca-certificates.crt"
+hashistack_default_nomad_consul_integration_client_tls_configuration: {}
 nomad_consul_integration_client_tls_configuration: >-
   {{
     hashistack_default_nomad_consul_integration_client_tls_configuration |

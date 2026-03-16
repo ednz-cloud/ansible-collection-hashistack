@@ -62,7 +62,7 @@ consul_configuration_string: |
   ports:
     http: {{ ('8500' | int) if not consul_enable_tls else ('-1' | int) }}
     https: {{ ('8501' | int) if consul_enable_tls else ('-1' | int) }}
-    grpc: {{ ('8502' | int) if not consul_enable_tls else ('-1' | int) }}
+    grpc: 8502
     grpc_tls: {{ ('8503' | int) if consul_enable_tls else ('-1' | int) }}
 
 consul_server_configuration_string: |
