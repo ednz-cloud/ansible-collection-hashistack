@@ -165,6 +165,6 @@
           ansible.builtin.assert:
             that:
               - "'molecule--consul--default' in consul_members.stdout"
-              - consul_kv_put.stdout == 'Success! Data written to: foo'
-              - consul_kv_get.stdout == 'bar'
-              - consul_kv_delete.stdout == 'Success! Deleted key: foo'
+              - "consul_kv_put.stdout == 'Success! Data written to: foo'"
+              - "consul_kv_get.stdout == 'bar'"
+              - "consul_kv_delete.stdout == 'Success! Deleted key: foo'"
