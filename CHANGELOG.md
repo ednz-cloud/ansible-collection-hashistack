@@ -1,3 +1,12 @@
+## v0.15.0 (2026-03-17)
+
+### Feat
+
+- **roles/nomad**: remove stringified config with new ansible jinja engine
+- **roles/consul**: remove stringified config with new ansible jinja engine
+- **core**: force nomad to use local plain grpc port to prevent TLS certificate mismatch
+- **core**: enable nomad workload identities for consul
+
 ## v0.14.2 (2026-02-24)
 
 ### Fix
