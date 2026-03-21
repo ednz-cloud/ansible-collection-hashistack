@@ -5,7 +5,7 @@
     path: "{{ hashistack_ca_consul_dir }}"
     state: directory
     owner: "{{ hashistack_ca_directory_owner }}"
-    group: "{{ hashistack_ca_directory_owner }}"
+    group: "{{ hashistack_ca_directory_group }}"
     mode: "0755"
 
 - name: "generate | generate_consul | Create Consul certificates"
