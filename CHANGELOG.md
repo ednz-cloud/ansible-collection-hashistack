@@ -1,3 +1,9 @@
+## v0.15.1 (2026-03-22)
+
+### Fix
+
+- **role/hashistack_ca**: fix permissions on consul certificate directory
+
 ## v0.15.0 (2026-03-17)
 
 ### Feat
