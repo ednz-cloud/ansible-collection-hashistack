@@ -111,7 +111,8 @@ nomad_driver_enable_qemu: false
 
 nomad_driver_configuration:
   raw_exec:
-    enabled: false
+    - config:
+        - enabled: false
 
 nomad_driver_extra_configuration: {}
 
