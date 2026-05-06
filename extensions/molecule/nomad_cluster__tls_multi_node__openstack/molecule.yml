@@ -7,7 +7,7 @@ platforms:
     user: ${MOLECULE_TEST_USER:-"debian"}
     auto_ip: false
     network:
-      name: pcp-w3rxsrj-backend-network
+      name: pcp-w3rxsrj-dc4-a-site-network
       create: false
     security_group:
       name: molecule__nomad_cluster__tls_multi_node__openstack
@@ -34,7 +34,7 @@ platforms:
     user: ${MOLECULE_TEST_USER:-"debian"}
     auto_ip: false
     network:
-      name: pcp-w3rxsrj-backend-network
+      name: pcp-w3rxsrj-dc4-a-site-network
       create: false
     security_group:
       name: molecule__nomad_cluster__tls_multi_node__openstack
@@ -58,7 +58,7 @@ platforms:
     user: ${MOLECULE_TEST_USER:-"debian"}
     auto_ip: false
     network:
-      name: pcp-w3rxsrj-backend-network
+      name: pcp-w3rxsrj-dc4-a-site-network
       create: false
     security_group:
       name: molecule__nomad_cluster__tls_multi_node__openstack
@@ -82,7 +82,7 @@ platforms:
     user: ${MOLECULE_TEST_USER:-"debian"}
     auto_ip: false
     network:
-      name: pcp-w3rxsrj-backend-network
+      name: pcp-w3rxsrj-dc4-a-site-network
       create: false
     security_group:
       name: molecule__nomad_cluster__tls_multi_node__openstack
@@ -105,7 +105,7 @@ platforms:
     user: ${MOLECULE_TEST_USER:-"debian"}
     auto_ip: false
     network:
-      name: pcp-w3rxsrj-backend-network
+      name: pcp-w3rxsrj-dc4-a-site-network
       create: false
     security_group:
       name: molecule__nomad_cluster__tls_multi_node__openstack
