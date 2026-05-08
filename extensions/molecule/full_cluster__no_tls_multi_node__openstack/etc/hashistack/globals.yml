@@ -8,7 +8,7 @@ enable_consul: "yes"
 enable_nomad: "yes"
 
 nomad_version: "1.11.2"
-consul_version: "1.22.4"
+consul_version: "1.22.5"
 vault_version: "1.21.2"
 
 api_interface: "enp3s0"
