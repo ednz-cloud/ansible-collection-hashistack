@@ -182,4 +182,4 @@
         - name: "Verify vault interaction"
           ansible.builtin.assert:
             that:
-              - vault_secret_enable.stdout == 'Success! Enabled the kv secrets engine at: kv/'
+              - 'vault_secret_enable.stdout == "Success! Enabled the kv secrets engine at: kv/"'
