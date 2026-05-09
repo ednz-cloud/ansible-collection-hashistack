@@ -1,3 +1,9 @@
+## v0.15.2 (2026-05-09)
+
+### Fix
+
+- **role/nomad**: adjust raw_exec default config (fixes GH#14)
+
 ## v0.15.1 (2026-03-22)
 
 ### Fix
