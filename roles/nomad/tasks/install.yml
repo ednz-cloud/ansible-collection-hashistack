@@ -35,9 +35,19 @@
         - _nomad_version_file.stat.isreg
       register: _nomad_current_version
 
+- name: "install | Set restart-check variable (check mode)"
+  ansible.builtin.set_fact:
+    _nomad_service_need_restart: true
+  when:
+    - ansible_check_mode
+    - _nomad_current_version is not defined
+      or _nomad_wanted_version != (_nomad_current_version.content | default('') | b64decode)
+
 - name: "install | Download and install nomad binary"
-  when: _nomad_current_version is not defined
-    or _nomad_wanted_version != (_nomad_current_version.content | default('') | b64decode)
+  when:
+    - not ansible_check_mode
+    - _nomad_current_version is not defined
+      or _nomad_wanted_version != (_nomad_current_version.content | default('') | b64decode)
   block:
     - name: "install | Set nomad package name to download"
       ansible.builtin.set_fact:
