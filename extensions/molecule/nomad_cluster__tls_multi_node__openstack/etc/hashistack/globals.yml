@@ -14,7 +14,7 @@ enable_vault: "no"
 enable_consul: "no"
 enable_nomad: "yes"
 
-nomad_version: "1.11.2"
+nomad_version: "2.0.3"
 
 api_interface: "enp3s0"
 api_interface_address: "{{ ansible_facts[api_interface]['ipv4']['address'] }}"

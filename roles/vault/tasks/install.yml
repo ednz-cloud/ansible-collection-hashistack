@@ -34,11 +34,19 @@
         - _vault_version_file.stat.isreg
       register: _vault_current_version
 
-- name: "install | Download and install vault binary"
+- name: "install | Set restart-check variable (check mode)"
+  ansible.builtin.set_fact:
+    _vault_service_need_restart: true
   when:
+    - ansible_check_mode
     - _vault_current_version is not defined
       or _vault_wanted_version != (_vault_current_version.content | default('') | b64decode)
+
+- name: "install | Download and install vault binary"
+  when:
     - not ansible_check_mode
+    - _vault_current_version is not defined
+      or _vault_wanted_version != (_vault_current_version.content | default('') | b64decode)
   block:
     - name: "install | Set vault package name to download"
       ansible.builtin.set_fact:

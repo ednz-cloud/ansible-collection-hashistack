@@ -34,9 +34,19 @@
         - _consul_version_file.stat.isreg
       register: _consul_current_version
 
+- name: "install | Set restart-check variable (check mode)"
+  ansible.builtin.set_fact:
+    _consul_service_need_restart: true
+  when:
+    - ansible_check_mode
+    - _consul_current_version is not defined
+      or _consul_wanted_version != (_consul_current_version.content | default('') | b64decode)
+
 - name: "install | Download and install consul binary"
-  when: _consul_current_version is not defined
-    or _consul_wanted_version != (_consul_current_version.content|default('')|b64decode)
+  when:
+    - not ansible_check_mode
+    - _consul_current_version is not defined
+      or _consul_wanted_version != (_consul_current_version.content | default('') | b64decode)
   block:
     - name: "install | Set consul package name to download"
       ansible.builtin.set_fact:
