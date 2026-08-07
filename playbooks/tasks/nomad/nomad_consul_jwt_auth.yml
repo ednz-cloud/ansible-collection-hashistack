@@ -31,6 +31,8 @@
         name: nomad-default-tasks
         policies:
           - name: nomad-tasks-policy
+      register: _nomad_task_role
+      changed_when: "{{ _nomad_task_role.operation == 'create' }}"
 
     - name: "nomad | nomad_consul_jwt_auth | Create nomad-workloads JWT auth method"
       community.general.consul_auth_method:
@@ -71,6 +73,8 @@
         selector: '"nomad_service" in value'
         bind_type: service
         bind_name: "${value.nomad_service}"
+      register: _nomad_services_binding_rule
+      changed_when: "{{ _nomad_services_binding_rule.operation == 'create' }}"
 
     - name: "nomad | nomad_consul_jwt_auth | Create binding rule for Nomad tasks"
       community.general.consul_binding_rule:
@@ -86,3 +90,5 @@
         selector: '"nomad_service" not in value'
         bind_type: role
         bind_name: "nomad-${value.nomad_namespace}-tasks"
+      register: _nomad_tasks_binding_rule
+      changed_when: "{{ _nomad_tasks_binding_rule.operation == 'create' }}"

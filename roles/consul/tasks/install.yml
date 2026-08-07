@@ -23,7 +23,6 @@
       ansible.builtin.stat:
         path: "{{ consul_config_dir }}/.version"
       changed_when: false
-      check_mode: false
       register: _consul_version_file
 
     - name: "install | Get current consul version"
@@ -64,7 +63,6 @@
       until: _consul_checksum_file is succeeded
       retries: 5
       delay: 2
-      check_mode: false
 
     - name: "install | Extract correct checksum from checksum file"
       ansible.builtin.command:
@@ -86,7 +84,6 @@
       until: _consul_binary_archive is succeeded
       retries: 5
       delay: 2
-      check_mode: false
 
     - name: "install | Create temporary directory for archive decompression"
       ansible.builtin.file:
