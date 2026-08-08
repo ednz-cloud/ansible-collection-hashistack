@@ -1,3 +1,13 @@
+## v0.16.0 (2026-08-08)
+
+### Feat
+
+- **deployment**: add support for true check mode on upgrades
+
+### Fix
+
+- **core**: make full deployment idempotent
+
 ## v0.15.3 (2026-05-18)
 
 ### Fix
