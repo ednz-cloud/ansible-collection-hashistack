@@ -18,7 +18,7 @@ dependencies = [
 pre-commit = ["pre-commit>=4.5.1"]
 
 [tool.ruff.lint.per-file-ignores]
-"plugins/modules/*.py" = ["E402"]
+"plugins/modules/*.py" = ["E402", "EXE001"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"

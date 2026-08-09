@@ -1,9 +1,5 @@
 #!/usr/bin/python
 
-from __future__ import absolute_import, division, print_function
-from typing import Tuple
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -80,8 +76,9 @@ state:
         root_token: hvs.zzzzzzzzzzzzzzzzzzzzzzzz
 """
 
-from ansible.module_utils.basic import AnsibleModule
 import traceback
+
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import hvac
@@ -95,7 +92,7 @@ else:
 
 def initialize_vault(
     api_url: str, tls_verify: bool, key_shares: int, key_threshold: int
-) -> Tuple[bool, dict]:
+) -> tuple[bool, dict]:
     client = hvac.Client(url=api_url, verify=tls_verify)
 
     try:
@@ -104,18 +101,18 @@ def initialize_vault(
         else:
             return False, {"message": "Vault is already initialized"}
     except hvac.exceptions.VaultError as e:
-        raise hvac.exceptions.VaultError(f"Vault initialization failed: {str(e)}")
+        raise hvac.exceptions.VaultError(f"Vault initialization failed: {e!s}")
 
 
 def run_module():
-    module_args = dict(
-        api_url=dict(type="str", required=True),
-        tls_verify=dict(type="bool", required=False, default=True),
-        key_shares=dict(type="int", required=False, default=5),
-        key_threshold=dict(type="int", required=False, default=3),
-    )
+    module_args = {
+        "api_url": {"type": "str", "required": True},
+        "tls_verify": {"type": "bool", "required": False, "default": True},
+        "key_shares": {"type": "int", "required": False, "default": 5},
+        "key_threshold": {"type": "int", "required": False, "default": 3},
+    }
 
-    result = dict(changed=False, state="")
+    result = {"changed": False, "state": ""}
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
 

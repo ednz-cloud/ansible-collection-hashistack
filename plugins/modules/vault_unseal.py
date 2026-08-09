@@ -1,9 +1,5 @@
 #!/usr/bin/python
 
-from __future__ import absolute_import, division, print_function
-from typing import Tuple
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -72,8 +68,9 @@ state:
         progress: 2,
         version: "0.6.2"
 """
-from ansible.module_utils.basic import AnsibleModule
 import traceback
+
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import hvac
@@ -85,7 +82,7 @@ else:
     HAS_HVAC = True
 
 
-def unseal_vault(api_url: str, tls_verify: bool, key_shares: list) -> Tuple[bool, dict]:
+def unseal_vault(api_url: str, tls_verify: bool, key_shares: list) -> tuple[bool, dict]:
     client = hvac.Client(url=api_url, verify=tls_verify)
 
     try:
@@ -94,16 +91,16 @@ def unseal_vault(api_url: str, tls_verify: bool, key_shares: list) -> Tuple[bool
         else:
             return False, {"message": "Vault is already unsealed"}
     except hvac.exceptions.VaultError as e:
-        raise hvac.exceptions.VaultError(f"Vault unsealing failed: {str(e)}")
+        raise hvac.exceptions.VaultError(f"Vault unsealing failed: {e!s}")
 
 
 def run_module():
-    module_args = dict(
-        api_url=dict(type="str", required=True),
-        tls_verify=dict(type="bool", required=False, default=True),
-        key_shares=dict(type="list", required=False, default=[]),
-    )
-    result = dict(changed=False, state="")
+    module_args = {
+        "api_url": {"type": "str", "required": True},
+        "tls_verify": {"type": "bool", "required": False, "default": True},
+        "key_shares": {"type": "list", "required": False, "default": []},
+    }
+    result = {"changed": False, "state": ""}
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
 

@@ -1,5 +1,5 @@
-from typing import Any
 import ipaddress
+from typing import Any
 
 
 class FilterModule:

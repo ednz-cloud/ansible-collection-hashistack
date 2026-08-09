@@ -1,9 +1,5 @@
 #!/usr/bin/python
 
-from __future__ import absolute_import, division, print_function
-from typing import Tuple
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -73,8 +69,9 @@ state:
         - ModifyIndex: 7
 """
 
-from ansible.module_utils.basic import AnsibleModule
 import traceback
+
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import requests
@@ -88,7 +85,7 @@ else:
 
 def bootstrap_nomad_acl(
     api_url: str, tls_verify: bool, bootstrap_secret: str
-) -> Tuple[bool, dict]:
+) -> tuple[bool, dict]:
     payload = {}
     if bootstrap_secret:
         payload["BootstrapSecret"] = bootstrap_secret
@@ -110,19 +107,19 @@ def bootstrap_nomad_acl(
             except ValueError:
                 error_message = response.text
             return False, {"message": error_message}
-        raise ValueError(f"Nomad ACL bootstrap failed: {str(e)}")
+        raise ValueError(f"Nomad ACL bootstrap failed: {e!s}")
     except requests.exceptions.RequestException as e:
-        raise ValueError(f"Nomad ACL bootstrap failed: {str(e)}")
+        raise ValueError(f"Nomad ACL bootstrap failed: {e!s}")
 
 
 def run_module():
-    module_args = dict(
-        api_url=dict(type="str", required=True),
-        bootstrap_secret=dict(type="str", required=False, no_log=True),
-        tls_verify=dict(type="bool", required=False, default=True),
-    )
+    module_args = {
+        "api_url": {"type": "str", "required": True},
+        "bootstrap_secret": {"type": "str", "required": False, "no_log": True},
+        "tls_verify": {"type": "bool", "required": False, "default": True},
+    }
 
-    result = dict(changed=False, state="")
+    result = {"changed": False, "state": ""}
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
 

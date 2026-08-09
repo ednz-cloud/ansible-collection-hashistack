@@ -1,9 +1,5 @@
 #!/usr/bin/python
 
-from __future__ import absolute_import, division, print_function
-from typing import Tuple
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -56,8 +52,9 @@ state:
         secret_id: "uuuuuuuu-uuuu-iiii-dddd-222222222222"
 """
 
-from ansible.module_utils.basic import AnsibleModule
 import traceback
+
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import requests
@@ -69,7 +66,7 @@ else:
     HAS_REQUESTS = True
 
 
-def bootstrap_acl(scheme: str, api_addr: str, port: int) -> Tuple[bool, dict]:
+def bootstrap_acl(scheme: str, api_addr: str, port: int) -> tuple[bool, dict]:
     url = f"{scheme}://" + f"{api_addr}:{port}" + "/v1/acl/bootstrap"
 
     response = requests.put(url)
@@ -86,22 +83,20 @@ def bootstrap_acl(scheme: str, api_addr: str, port: int) -> Tuple[bool, dict]:
 
 
 def run_module():
-    module_args = dict(
-        api_addr=dict(type="str", required=True),
-        scheme=dict(type="str", required=False, default="http"),
-        port=dict(type="int", required=False, default=8500),
-    )
+    module_args = {
+        "api_addr": {"type": "str", "required": True},
+        "scheme": {"type": "str", "required": False, "default": "http"},
+        "port": {"type": "int", "required": False, "default": 8500},
+    }
 
-    result = dict(changed=False, state="")
+    result = {"changed": False, "state": ""}
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
 
     try:
         if not HAS_REQUESTS:
             module.fail_json(
-                msg="Requests library is required but not installed. {}".format(
-                    REQUESTS_IMPORT_ERROR
-                )
+                msg=f"Requests library is required but not installed. {REQUESTS_IMPORT_ERROR}"
             )
 
         acl_bootstrap_result, response_data = bootstrap_acl(
@@ -116,7 +111,7 @@ def run_module():
         module.exit_json(**result)
 
     except requests.exceptions.RequestException as e:
-        module.fail_json(msg="Error during ACL Bootstrap: {}".format(str(e)))
+        module.fail_json(msg=f"Error during ACL Bootstrap: {e!s}")
 
 
 def main():
