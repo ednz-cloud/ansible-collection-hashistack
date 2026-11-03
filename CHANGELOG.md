@@ -1,3 +1,10 @@
+## v0.16.1 (2026-11-03)
+
+### Fix
+
+- **deps**: bump python minimum version to 3.13
+- **deps**: update dependency ansible-core to >=2.22,<2.23
+
 ## v0.16.0 (2026-08-08)
 
 ### Feat
